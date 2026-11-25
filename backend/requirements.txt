@@ -1,0 +1,15 @@
+fastapi
+uvicorn[standard]
+pyjwt
+argon2-cffi
+pyotp
+qrcode[pil]
+slowapi
+itsdangerous
+apscheduler
+fastapi-mail
+websockets
+pytest 
+httpx
+ruff
+python-multipart
