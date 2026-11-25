@@ -1,0 +1,18 @@
+﻿{% extends "base.html" %}
+{% block title %}Cadet Roster — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-6xl">
+  <h1 class="text-2xl font-bold mb-6">Cadet Roster</h1>
+  <div class="mb-4">
+    <input type="text" placeholder="Search cadets..." class="input input-bordered w-full max-w-xs" />
+  </div>
+  {% from 'components/data_table.html' import render_data_table %}
+  {{ render_data_table(columns=[
+    {'key': 'cadet_no', 'label': 'Cadet No'},
+    {'key': 'full_name', 'label': 'Name'},
+    {'key': 'rank', 'label': 'Rank'},
+    {'key': 'squad', 'label': 'Squad'},
+    {'key': 'actions', 'label': 'Actions', 'sortable': false}
+  ], rows=cadets) }}
+</div>
+{% endblock %}

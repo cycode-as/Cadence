@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block title %}Leave Requests — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-6xl">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold">Leave Requests</h1>
+    {% if 'CADET' in user.role %}
+    <a href="/leave/apply" class="btn btn-cadence">Apply for Leave</a>
+    {% endif %}
+  </div>
+  {% from 'components/data_table.html' import render_data_table %}
+  {% from 'components/empty_state.html' import render_empty_state %}
+  {% if items | length > 0 %}
+  {{ render_data_table(columns=[
+    {'key': 'cadet_name', 'label': 'Cadet'},
+    {'key': 'from_date', 'label': 'From'},
+    {'key': 'to_date', 'label': 'To'},
+    {'key': 'status', 'label': 'Status'},
+    {'key': 'actions', 'label': 'Actions', 'sortable': false}
+  ], rows=items) }}
+  {% else %}
+  <div class="cadence-card p-12">{{ render_empty_state('No leave requests found') }}</div>
+  {% endif %}
+</div>
+{% endblock %}

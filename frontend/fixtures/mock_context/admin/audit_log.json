@@ -1,0 +1,11 @@
+﻿{
+  "user": {"id": "u-co", "full_name": "Col. Rajesh Nair", "role": "CO", "rank": "OFFICER", "scope_type": "BATTALION", "scope_name": "1st Battalion Delhi"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Admin", "href": "/admin/audit", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 0, "pending_actions": 0},
+  "items": [
+    {"timestamp": "2024-01-21 10:30 IST", "actor": "Lt. Meera Iyer", "action": "APPROVED", "entity": "Attendance Sheet", "details": "Sunday Drill - Alpha Squad 1"},
+    {"timestamp": "2024-01-21 09:15 IST", "actor": "JUO Vikram Reddy", "action": "REVIEWED", "entity": "Leave Request", "details": "Cadet Arjun Singh"}
+  ],
+  "next_cursor": null
+}

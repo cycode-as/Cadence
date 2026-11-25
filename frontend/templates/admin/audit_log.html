@@ -1,0 +1,15 @@
+﻿{% extends "base.html" %}
+{% block title %}Audit Log — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-6xl">
+  <h1 class="text-2xl font-bold mb-6">Audit Log</h1>
+  {% from 'components/data_table.html' import render_data_table %}
+  {{ render_data_table(columns=[
+    {'key': 'timestamp', 'label': 'Time'},
+    {'key': 'actor', 'label': 'Actor'},
+    {'key': 'action', 'label': 'Action'},
+    {'key': 'entity', 'label': 'Entity'},
+    {'key': 'details', 'label': 'Details'}
+  ], rows=items, options={'paginated': true, 'next_cursor': next_cursor}) }}
+</div>
+{% endblock %}

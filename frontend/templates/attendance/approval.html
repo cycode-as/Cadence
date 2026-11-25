@@ -1,0 +1,36 @@
+﻿{% extends "base.html" %}
+{% block title %}Approve Attendance — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-6xl">
+  <h1 class="text-2xl font-bold mb-6">Review Attendance Sheet</h1>
+  <div class="grid gap-6">
+    <div class="cadence-card p-6">
+      <p><strong>Parade:</strong> {{ sheet.parade.name }} — {{ sheet.parade.date | format_ist('%d %b %Y') }}</p>
+      <p><strong>Squad:</strong> {{ sheet.squad.name }}</p>
+      <p><strong>Status:</strong> <span class="badge">{{ sheet.status }}</span></p>
+    </div>
+    <div class="cadence-card p-6">
+      <table class="table table-zebra w-full">
+        <thead><tr><th>Cadet</th><th>Status</th><th>Remark</th></tr></thead>
+        <tbody>
+          {% for rec in sheet.records %}
+          <tr><td>{{ rec.full_name }}</td><td><span class="badge badge-sm">{{ rec.status }}</span></td><td>{{ rec.remark }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% from 'components/status_timeline.html' import render_status_timeline %}
+    {{ render_status_timeline(timeline=sheet.timeline, title="Approval Chain") }}
+    {% if allowed_actions | length > 0 %}
+    <div class="flex gap-3 justify-end">
+      {% if 'APPROVE' in allowed_actions %}
+      <button class="btn btn-success" hx-post="/api/attendance/sheets/{{ sheet.id }}/approve" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>Approve</button>
+      {% endif %}
+      {% if 'RETURN' in allowed_actions %}
+      <button class="btn btn-warning" hx-post="/api/attendance/sheets/{{ sheet.id }}/return" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>Return for Correction</button>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

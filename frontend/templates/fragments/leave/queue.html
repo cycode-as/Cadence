@@ -1,0 +1,9 @@
+﻿<div id="leave-queue" hx-trigger="leave.updated from:body" hx-get="/fragments/leave/queue" hx-swap="outerHTML">
+  {% for leave in items %}
+  <div class="cadence-card p-4 mb-3">
+    <a href="/leave/{{ leave.id }}" class="font-medium link link-primary">{{ leave.cadet_name }}</a>
+    <span class="badge badge-sm ml-2">{{ leave.status }}</span>
+    <p class="text-sm text-[var(--cadence-muted)]">{{ leave.from_date }} to {{ leave.to_date }}</p>
+  </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,24 @@
+﻿{
+  "user": {"id": "u-juo", "full_name": "JUO Vikram Reddy", "role": "JUO", "rank": "JUO", "scope_type": "COMPANY", "scope_name": "Alpha Company"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Attendance", "href": "/attendance/sheet/test-456?view=approval", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 1, "pending_actions": 2},
+  "sheet": {
+    "id": "sheet-456",
+    "parade": {"id": "parade-1", "name": "Sunday Drill", "date": "2024-01-21T04:00:00Z"},
+    "squad": {"id": "squad-alpha-1", "name": "Alpha Squad 1"},
+    "status": "SUBMITTED",
+    "version": 2,
+    "records": [
+      {"cadet_user_id": "u-c1", "full_name": "Cadet Arjun Singh", "cadet_no": "NCC-2026-0142", "rank": "CADET", "status": "PRESENT", "remark": ""},
+      {"cadet_user_id": "u-c2", "full_name": "Cadet Priya Sharma", "cadet_no": "NCC-2026-0143", "rank": "LCPL", "status": "PRESENT", "remark": ""}
+    ],
+    "timeline": [
+      {"step": "1", "label": "Draft", "actor": "Cpl. Ravi Kumar", "at": "2024-01-20T08:00:00Z", "state": "done"},
+      {"step": "2", "label": "Submitted", "actor": "Cpl. Ravi Kumar", "at": "2024-01-20T10:00:00Z", "state": "done"},
+      {"step": "3", "label": "JUO Review", "actor": null, "at": null, "state": "current"},
+      {"step": "4", "label": "ANO Approval", "actor": null, "at": null, "state": "pending"}
+    ]
+  },
+  "allowed_actions": ["APPROVE", "RETURN"]
+}

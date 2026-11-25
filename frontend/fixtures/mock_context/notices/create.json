@@ -1,0 +1,12 @@
+﻿{
+  "user": {"id": "u-ano", "full_name": "Lt. Meera Iyer", "role": "ANO", "rank": "OFFICER", "scope_type": "CONTINGENT", "scope_name": "SRCC Contingent"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Notices", "href": "/notices"}, {"label": "Create Notice", "href": "/notices/new", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 0, "pending_actions": 2},
+  "scope_options": [
+    {"value": "battalion", "label": "Entire Battalion"},
+    {"value": "contingent:srcc", "label": "SRCC Contingent"},
+    {"value": "company:alpha", "label": "Alpha Company"},
+    {"value": "squad:alpha-1", "label": "Alpha Squad 1"}
+  ]
+}

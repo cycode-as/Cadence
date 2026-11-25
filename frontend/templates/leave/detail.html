@@ -1,0 +1,30 @@
+﻿{% extends "base.html" %}
+{% block title %}Leave Request — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-4xl">
+  <h1 class="text-2xl font-bold mb-6">Leave Request Details</h1>
+  <div class="grid gap-6">
+    <div class="cadence-card p-6">
+      <dl class="grid grid-cols-2 gap-4">
+        <div><dt class="font-semibold">Cadet</dt><dd>{{ leave.cadet_name }}</dd></div>
+        <div><dt class="font-semibold">Status</dt><dd><span class="badge">{{ leave.status }}</span></dd></div>
+        <div><dt class="font-semibold">From</dt><dd>{{ leave.from_date }}</dd></div>
+        <div><dt class="font-semibold">To</dt><dd>{{ leave.to_date }}</dd></div>
+        <div class="col-span-2"><dt class="font-semibold">Reason</dt><dd>{{ leave.reason }}</dd></div>
+      </dl>
+    </div>
+    {% from 'components/status_timeline.html' import render_status_timeline %}
+    {{ render_status_timeline(timeline=leave.timeline, title="Approval Chain") }}
+    {% if allowed_actions | length > 0 %}
+    <div class="flex gap-3 justify-end">
+      {% if 'APPROVE' in allowed_actions %}
+      <button class="btn btn-success" hx-post="/api/leave/{{ leave.id }}/approve" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>Approve</button>
+      {% endif %}
+      {% if 'REJECT' in allowed_actions %}
+      <button class="btn btn-error" hx-post="/api/leave/{{ leave.id }}/reject" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>Reject</button>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

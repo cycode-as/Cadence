@@ -1,0 +1,21 @@
+﻿{
+  "user": {"id": "u-juo", "full_name": "JUO Vikram Reddy", "role": "JUO", "rank": "JUO", "scope_type": "COMPANY", "scope_name": "Alpha Company"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Leave", "href": "/leave", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 0, "pending_actions": 1},
+  "leave": {
+    "id": "leave-123",
+    "cadet_name": "Cadet Arjun Singh",
+    "from_date": "2024-02-15",
+    "to_date": "2024-02-17",
+    "reason": "Family function in hometown",
+    "status": "PENDING_JUO",
+    "timeline": [
+      {"step": "1", "label": "Submitted by Cadet", "actor": "Cadet Arjun Singh", "at": "2024-01-20T10:00:00Z", "state": "done"},
+      {"step": "2", "label": "Squad Leader Review", "actor": "Cpl. Anjali Patel", "at": "2024-01-20T14:00:00Z", "state": "done"},
+      {"step": "3", "label": "JUO Approval", "actor": null, "at": null, "state": "current"},
+      {"step": "4", "label": "ANO Approval", "actor": null, "at": null, "state": "pending"}
+    ]
+  },
+  "allowed_actions": ["APPROVE", "REJECT", "FORWARD"]
+}

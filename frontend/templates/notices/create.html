@@ -1,0 +1,32 @@
+﻿{% extends "base.html" %}
+{% block title %}Create Notice — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-2xl">
+  <h1 class="text-2xl font-bold mb-6">Create Unit Notice</h1>
+  <form class="cadence-card p-6" hx-post="/api/notices" hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'>
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}" />
+    <div class="grid gap-4">
+      <div>
+        <label class="label"><span class="label-text">Title</span></label>
+        <input type="text" name="title" class="input input-bordered w-full" required />
+      </div>
+      <div>
+        <label class="label"><span class="label-text">Content</span></label>
+        <textarea name="content" class="textarea textarea-bordered w-full" rows="6" required></textarea>
+      </div>
+      <div>
+        <label class="label"><span class="label-text">Scope</span></label>
+        <select name="scope" class="select select-bordered w-full">
+          {% for opt in scope_options %}
+          <option value="{{ opt.value }}">{{ opt.label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="flex justify-end gap-3">
+        <a href="/notices" class="btn btn-outline">Cancel</a>
+        <button type="submit" class="btn btn-cadence">Publish Notice</button>
+      </div>
+    </div>
+  </form>
+</div>
+{% endblock %}

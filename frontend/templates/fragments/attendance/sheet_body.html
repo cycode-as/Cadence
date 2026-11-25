@@ -1,0 +1,10 @@
+﻿<div id="sheet-{{ entity_id }}" hx-trigger="attendance.updated from:body" hx-get="/fragments/attendance/sheet/{{ entity_id }}/body" hx-swap="outerHTML">
+  <table class="table table-zebra w-full">
+    <thead><tr><th>Cadet</th><th>Status</th><th>Remark</th></tr></thead>
+    <tbody>
+      {% for rec in records %}
+      <tr><td>{{ rec.full_name }}</td><td>{{ rec.status }}</td><td>{{ rec.remark }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

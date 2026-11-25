@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block title %}My Attendance — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-5xl">
+  <h1 class="text-2xl font-bold mb-6">My Attendance History</h1>
+  <div class="cadence-card p-6 mb-6">
+    {% from 'components/chart_card.html' import render_chart_card %}
+    {{ render_chart_card(
+      title="Attendance Percentage",
+      chart_id="attendance-chart",
+      chart_type="bar",
+      height="200px",
+      data={"labels": ["Jan", "Feb", "Mar"], "datasets": [{"label": "Attendance %", "data": [92, 88, 95]}]}
+    ) }}
+    <p class="text-center mt-4"><span class="text-3xl font-bold">{{ attendance_pct }}%</span> overall</p>
+  </div>
+  {% from 'components/data_table.html' import render_data_table %}
+  {{ render_data_table(columns=[
+    {'key': 'parade', 'label': 'Parade'},
+    {'key': 'date', 'label': 'Date'},
+    {'key': 'status', 'label': 'Status'},
+    {'key': 'remark', 'label': 'Remark'}
+  ], rows=items) }}
+</div>
+{% endblock %}

@@ -26,10 +26,26 @@ from frontend.pages.common import (
     resolve_dev_role,
 )
 from frontend.pages.dashboards import router as dashboards_router
+from frontend.pages.dashboards import router as dashboards_router
+from frontend.pages.attendance import router as attendance_router
+from frontend.pages.leave import router as leave_router
+from frontend.pages.notices import router as notices_router
+from frontend.pages.guest import router as guest_router
+from frontend.pages.reports import router as reports_router
+from frontend.pages.admin import router as admin_router
+from frontend.pages.analytics import router as analytics_router
 
 app = FastAPI(title="CADENCE Frontend Dev Server", docs_url="/dev/docs")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.include_router(dashboards_router)
+app.include_router(dashboards_router)
+app.include_router(attendance_router)
+app.include_router(leave_router)
+app.include_router(notices_router)
+app.include_router(guest_router)
+app.include_router(reports_router)
+app.include_router(admin_router)
+app.include_router(analytics_router)
 
 
 def _advance_timeline_steps(steps: list[dict[str, Any]]) -> None:
@@ -395,3 +411,5 @@ def custom_http_exception_handler(request: Request, exc: StarletteHTTPException)
         extra={"message": str(exc.detail)},
         status_code=exc.status_code,
     )
+
+

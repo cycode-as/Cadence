@@ -1,0 +1,6 @@
+﻿{
+  "user": {"id": "u-co", "full_name": "Col. Rajesh Nair", "role": "CO", "rank": "OFFICER", "scope_type": "BATTALION", "scope_name": "1st Battalion Delhi"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Reports", "href": "/reports", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 1, "pending_actions": 0}
+}

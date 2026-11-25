@@ -1,0 +1,7 @@
+﻿{
+  "user": {"id": "u-juo", "full_name": "JUO Vikram Reddy", "role": "JUO", "rank": "JUO", "scope_type": "COMPANY", "scope_name": "Alpha Company"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Attendance", "href": "/attendance/review", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 1, "pending_actions": 2},
+  "items": []
+}

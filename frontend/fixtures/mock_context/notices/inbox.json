@@ -1,0 +1,10 @@
+﻿{
+  "user": {"id": "u-ano", "full_name": "Lt. Meera Iyer", "role": "ANO", "rank": "OFFICER", "scope_type": "CONTINGENT", "scope_name": "SRCC Contingent"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Notices", "href": "/notices", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 0, "pending_actions": 3},
+  "items": [
+    {"title": "Republic Day Parade Preparation", "content": "All cadets report at 0600 hrs on 26th Jan", "created_at": "2024-01-15T05:00:00Z", "read": false},
+    {"title": "Annual Training Camp Schedule", "content": "Camp dates: 15-20 March 2024 at Dehradun", "created_at": "2024-01-10T08:00:00Z", "read": true}
+  ]
+}

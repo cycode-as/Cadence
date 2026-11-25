@@ -1,0 +1,20 @@
+﻿{
+  "user": null,
+  "nav_items": [],
+  "csrf_token": "",
+  "bell": {"unread_notices": 0, "pending_actions": 0},
+  "public_notices": [
+    {"title": "Welcome to CADENCE", "content": "Digital management platform for NCC Army Wing units"},
+    {"title": "Republic Day Parade 2024", "content": "Public welcome to attend at India Gate, 0800-1000 hrs"}
+  ],
+  "exam_resources": [
+    {"title": "A Certificate Syllabus", "url": "https://indiancc.nic.in/a-cert", "level": "A"},
+    {"title": "B Certificate Mock Tests", "url": "https://indiancc.nic.in/b-cert", "level": "B"},
+    {"title": "C Certificate Study Material", "url": "https://indiancc.nic.in/c-cert", "level": "C"}
+  ],
+  "items": [
+    {"title": "A Certificate Syllabus 2024", "url": "https://indiancc.nic.in/a-cert", "level": "A"},
+    {"title": "B Certificate Weapons Training Guide", "url": "https://indiancc.nic.in/b-weapons", "level": "B"},
+    {"title": "C Certificate Leadership Module", "url": "https://indiancc.nic.in/c-leadership", "level": "C"}
+  ]
+}

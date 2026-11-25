@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block title %}Exam Resources — CADENCE{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-5xl">
+  <h1 class="text-2xl font-bold mb-6">NCC Certificate Exam Resources</h1>
+  <div role="tablist" class="tabs tabs-lifted">
+    {% for level in ['A', 'B', 'C'] %}
+    <input type="radio" name="exam_tabs" role="tab" class="tab" aria-label="{{ level }} Certificate" {% if loop.first %}checked{% endif %} />
+    <div role="tabpanel" class="tab-content bg-base-100 border-base-300 rounded-box p-6">
+      {% from 'components/empty_state.html' import render_empty_state %}
+      {% set level_items = items | selectattr('level', 'equalto', level) | list %}
+      {% if level_items | length > 0 %}
+      <ul class="space-y-2">
+        {% for item in level_items %}
+        <li><a href="{{ item.url }}" target="_blank" class="link link-primary">{{ item.title }}</a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      {{ render_empty_state('No resources for ' + level + ' certificate yet') }}
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

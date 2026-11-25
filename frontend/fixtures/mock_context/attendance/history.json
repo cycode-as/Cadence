@@ -1,0 +1,11 @@
+﻿{
+  "user": {"id": "u-1", "full_name": "Cadet Ravi Kumar", "role": "CADET", "rank": "CADET", "scope_type": "SELF", "scope_name": "Self"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Attendance", "href": "/attendance/history", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 2, "pending_actions": 0},
+  "attendance_pct": 92,
+  "items": [
+    {"parade": "Sunday Drill", "date": "2024-01-21", "status": "PRESENT", "remark": ""},
+    {"parade": "Tuesday PT", "date": "2024-01-16", "status": "LATE", "remark": "Traffic delay"}
+  ]
+}

@@ -1,0 +1,10 @@
+﻿{
+  "user": {"id": "u-leader", "full_name": "Cpl. Anjali Patel", "role": "CADET_LEADER", "rank": "CPL", "scope_type": "SQUAD", "scope_name": "Alpha Squad 1"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Leave", "href": "/leave", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 1, "pending_actions": 2},
+  "items": [
+    {"cadet_name": "Cadet Arjun Singh", "from_date": "2024-02-15", "to_date": "2024-02-17", "status": "PENDING_LEADER", "actions": ""},
+    {"cadet_name": "Cadet Priya Sharma", "from_date": "2024-02-20", "to_date": "2024-02-22", "status": "PENDING_JUO", "actions": ""}
+  ]
+}

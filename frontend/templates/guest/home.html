@@ -1,0 +1,33 @@
+﻿{% extends "base.html" %}
+{% set hide_sidebar = true %}
+{% block title %}CADENCE — NCC Unit Management{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-6xl">
+  <div class="text-center mb-8">
+    <h1 class="text-4xl font-bold mb-2">CADENCE</h1>
+    <p class="text-[var(--cadence-muted)]">Army Wing NCC Unit Management Platform</p>
+  </div>
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="cadence-card p-6">
+      <h2 class="text-xl font-semibold mb-4">Unit Notices</h2>
+      {% for notice in public_notices %}
+      <div class="mb-3 pb-3 border-b border-base-300 last:border-0">
+        <h3 class="font-medium">{{ notice.title }}</h3>
+        <p class="text-sm text-[var(--cadence-muted)] mt-1">{{ notice.content }}</p>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="cadence-card p-6">
+      <h2 class="text-xl font-semibold mb-4">Exam Resources</h2>
+      {% for item in exam_resources %}
+      <div class="mb-2">
+        <a href="{{ item.url }}" target="_blank" class="link link-primary">{{ item.title }} ({{ item.level }} Cert)</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="text-center mt-8">
+    <a href="/login" class="btn btn-cadence">Unit Login</a>
+  </div>
+</div>
+{% endblock %}

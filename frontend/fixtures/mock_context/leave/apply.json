@@ -1,0 +1,6 @@
+﻿{
+  "user": {"id": "u-1", "full_name": "Cadet Ravi Kumar", "role": "CADET", "rank": "CADET", "scope_type": "SELF", "scope_name": "Self"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Leave", "href": "/leave", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 2, "pending_actions": 0}
+}

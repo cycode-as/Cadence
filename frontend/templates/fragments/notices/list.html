@@ -1,0 +1,8 @@
+﻿<div id="notice-list" hx-trigger="notice.created from:body" hx-get="/fragments/notices/list" hx-swap="outerHTML">
+  {% for notice in items %}
+  <div class="cadence-card p-4 mb-3 {% if not notice.read %}border-l-4 border-l-amber-500{% endif %}">
+    <h3 class="font-semibold">{{ notice.title }}</h3>
+    <p class="text-sm text-[var(--cadence-muted)]">{{ notice.content }}</p>
+  </div>
+  {% endfor %}
+</div>

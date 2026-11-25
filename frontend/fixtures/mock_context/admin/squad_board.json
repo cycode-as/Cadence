@@ -1,0 +1,15 @@
+﻿{
+  "user": {"id": "u-ano", "full_name": "Lt. Meera Iyer", "role": "ANO", "rank": "OFFICER", "scope_type": "CONTINGENT", "scope_name": "SRCC Contingent"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Admin", "href": "/admin/squads", "active": true}],
+  "csrf_token": "dev-csrf-token",
+  "bell": {"unread_notices": 0, "pending_actions": 0},
+  "squads": [
+    {"id": "squad-1", "name": "Alpha Squad 1", "cadets": [
+      {"id": "c1", "full_name": "Cadet Arjun Singh", "rank": "CADET"},
+      {"id": "c2", "full_name": "Cadet Priya Sharma", "rank": "LCPL"}
+    ]},
+    {"id": "squad-2", "name": "Alpha Squad 2", "cadets": [
+      {"id": "c3", "full_name": "Cadet Vikram Reddy", "rank": "CADET"}
+    ]}
+  ]
+}
