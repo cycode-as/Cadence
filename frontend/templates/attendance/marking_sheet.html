@@ -1,0 +1,82 @@
+﻿{% extends "base.html" %}
+{% block title %}Mark Attendance — CADENCE{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6 max-w-6xl">
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+    <div>
+      <h1 class="text-2xl font-bold mb-1">Mark Attendance</h1>
+      <p class="text-sm text-[var(--cadence-muted)]">{{ sheet.parade.name }} — {{ sheet.parade.date | format_ist('%d %b %Y') }}</p>
+    </div>
+    <div class="badge badge-lg {{ 'badge-warning' if sheet.status == 'DRAFT' else 'badge-info' }}">
+      {{ sheet.status }}
+    </div>
+  </div>
+
+  <div class="grid gap-6">
+    <div class="cadence-card p-6" id="sheet-{{ sheet.id }}">
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>Cadet No</th>
+              <th>Name</th>
+              <th>Rank</th>
+              <th>Status</th>
+              <th>Remark</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in sheet.records %}
+            <tr>
+              <td class="font-mono text-xs">{{ record.cadet_no }}</td>
+              <td class="font-medium">{{ record.full_name }}</td>
+              <td><span class="badge badge-sm badge-outline">{{ record.rank }}</span></td>
+              <td>
+                <select
+                  name="status_{{ record.cadet_user_id }}"
+                  class="select select-sm select-bordered"
+                  {% if 'EDIT' not in allowed_actions %}disabled{% endif %}
+                  aria-label="Attendance status for {{ record.full_name }}"
+                >
+                  <option value="PRESENT" {% if record.status == 'PRESENT' %}selected{% endif %}>Present</option>
+                  <option value="ABSENT" {% if record.status == 'ABSENT' %}selected{% endif %}>Absent</option>
+                  <option value="LATE" {% if record.status == 'LATE' %}selected{% endif %}>Late</option>
+                  <option value="LEAVE" {% if record.status == 'LEAVE' %}selected{% endif %}>On Leave</option>
+                </select>
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="remark_{{ record.cadet_user_id }}"
+                  value="{{ record.remark | default('') }}"
+                  placeholder="Optional"
+                  class="input input-sm input-bordered w-full max-w-xs"
+                  {% if 'EDIT' not in allowed_actions %}disabled{% endif %}
+                  aria-label="Remark for {{ record.full_name }}"
+                />
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      {% if 'SUBMIT' in allowed_actions %}
+      <div class="mt-6 flex justify-end gap-3">
+        <button type="button" class="btn btn-outline" onclick="history.back()">Cancel</button>
+        <button
+          type="button"
+          class="btn btn-cadence"
+          hx-post="/api/attendance/sheets/{{ sheet.id }}/submit"
+          hx-headers='{"X-CSRF-Token": "{{ csrf_token }}"}'
+          hx-confirm="Submit this attendance sheet for review?"
+        >
+          Submit for Review
+        </button>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

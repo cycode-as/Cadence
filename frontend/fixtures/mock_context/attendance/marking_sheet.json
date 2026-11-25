@@ -1,0 +1,20 @@
+﻿{
+  "user": {"id": "u-leader-1", "full_name": "Cpl. Ravi Kumar", "role": "CADET_LEADER", "rank": "CPL", "scope_type": "SQUAD", "scope_name": "Alpha Squad 1"},
+  "nav_items": [{"label": "Dashboard", "href": "/dashboard"}, {"label": "Attendance", "href": "/attendance/review", "active": true}],
+  "csrf_token": "dev-csrf-token-12345",
+  "bell": {"unread_notices": 2, "pending_actions": 3},
+  "sheet": {
+    "id": "sheet-abc-123",
+    "parade": {"id": "parade-1", "name": "Sunday Drill", "date": "2024-01-21T04:00:00Z"},
+    "squad": {"id": "squad-alpha-1", "name": "Alpha Squad 1"},
+    "status": "DRAFT",
+    "version": 1,
+    "records": [
+      {"cadet_user_id": "u-c1", "full_name": "Cadet Arjun Singh", "cadet_no": "NCC-2026-0142", "rank": "CADET", "status": "PRESENT", "remark": ""},
+      {"cadet_user_id": "u-c2", "full_name": "Cadet Priya Sharma", "cadet_no": "NCC-2026-0143", "rank": "LCPL", "status": "PRESENT", "remark": ""},
+      {"cadet_user_id": "u-c3", "full_name": "Cadet Anjali Patel", "cadet_no": "NCC-2026-0144", "rank": "CADET", "status": "ABSENT", "remark": "Sick"},
+      {"cadet_user_id": "u-c4", "full_name": "Cadet Vikram Reddy", "cadet_no": "NCC-2026-0145", "rank": "CADET", "status": "LATE", "remark": "Arrived 15 mins late"}
+    ]
+  },
+  "allowed_actions": ["EDIT", "SUBMIT"]
+}

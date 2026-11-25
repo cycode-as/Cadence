@@ -1,0 +1,103 @@
+﻿{# Reusable sortable data table with pagination, empty state, loading state #}
+{% macro render_data_table(columns, rows, options={}) %}
+{% set table_id = options.get('id', 'data-table') %}
+{% set sortable = options.get('sortable', true) %}
+{% set paginated = options.get('paginated', false) %}
+{% set next_cursor = options.get('next_cursor') %}
+{% set loading = options.get('loading', false) %}
+{% set empty_message = options.get('empty_message', 'No records found') %}
+{% set empty_icon = options.get('empty_icon', 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z') %}
+
+<div class="cadence-card p-0 overflow-hidden">
+  {% if loading %}
+  <div class="flex items-center justify-center py-12">
+    {% from 'components/loading.html' import render_loading %}
+    {{ render_loading() }}
+  </div>
+  {% elif rows | length == 0 %}
+  <div class="flex items-center justify-center py-12">
+    {% from 'components/empty_state.html' import render_empty_state %}
+    {{ render_empty_state(empty_message, empty_icon) }}
+  </div>
+  {% else %}
+  <div class="overflow-x-auto">
+    <table id="{{ table_id }}" class="table table-zebra table-pin-rows w-full">
+      <thead>
+        <tr>
+          {% for col in columns %}
+          <th class="{{ col.get('class', '') }} {{ 'cursor-pointer hover:bg-base-200 dark:hover:bg-base-300 select-none' if sortable and col.get('sortable', true) }}"
+              {% if sortable and col.get('sortable', true) %}
+              data-column="{{ col.key }}"
+              onclick="sortTable('{{ table_id }}', '{{ col.key }}')"
+              role="button"
+              tabindex="0"
+              aria-label="Sort by {{ col.label }}"
+              {% endif %}>
+            <div class="flex items-center gap-1.5">
+              <span>{{ col.label }}</span>
+              {% if sortable and col.get('sortable', true) %}
+              <svg class="w-3 h-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+              </svg>
+              {% endif %}
+            </div>
+          </th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+        <tr class="hover:bg-base-100 dark:hover:bg-base-200/50 transition">
+          {% for col in columns %}
+          <td class="{{ col.get('class', '') }}">
+            {% if col.get('render') %}
+              {{ col.render(row) | safe }}
+            {% else %}
+              {{ row.get(col.key, '—') }}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if paginated and next_cursor %}
+  <div class="p-4 border-t border-base-300 dark:border-base-700 flex justify-center">
+    <button
+      type="button"
+      class="btn btn-sm btn-outline"
+      hx-get="?cursor={{ next_cursor }}"
+      hx-target="closest .cadence-card"
+      hx-swap="outerHTML"
+      hx-indicator="#{{ table_id }}-spinner"
+    >
+      <span id="{{ table_id }}-spinner" class="loading loading-spinner loading-xs htmx-indicator"></span>
+      Load More
+    </button>
+  </div>
+  {% endif %}
+  {% endif %}
+</div>
+
+<script>
+  function sortTable(tableId, columnKey) {
+    const table = document.getElementById(tableId);
+    const tbody = table.querySelector('tbody');
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+    const columnIndex = Array.from(table.querySelectorAll('thead th')).findIndex(
+      th => th.dataset.column === columnKey
+    );
+    if (columnIndex === -1) return;
+    
+    // Simple client-side sort (ascending)
+    rows.sort((a, b) => {
+      const aText = a.cells[columnIndex].textContent.trim();
+      const bText = b.cells[columnIndex].textContent.trim();
+      return aText.localeCompare(bText, undefined, { numeric: true });
+    });
+    
+    rows.forEach(row => tbody.appendChild(row));
+  }
+</script>
+{% endmacro %}
