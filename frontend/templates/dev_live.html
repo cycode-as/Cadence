@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% from "components/status_timeline.html" import render_status_timeline %}
+{% from "components/presence_badge.html" import render_presence_badge %}
+
+{% block title %}Live Components Preview — CADENCE{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="cadence-card p-5 flex flex-wrap items-center justify-between gap-4">
+    <div>
+      <span class="badge badge-sm badge-khaki">Phase 3 &middot; Live WebSocket &amp; Fragments</span>
+      <h1 class="text-2xl font-bold mt-1">Real-Time Timeline, Presence &amp; Alerts</h1>
+      <p class="text-sm text-[var(--cadence-muted)] mt-1">
+        Click the simulator buttons below or in the bottom-left WS Simulator to watch timelines, presence badge, bell, and toasts update without a page refresh.
+      </p>
+    </div>
+    <div class="flex flex-wrap items-center gap-2">
+      {{ render_presence_badge("attendance_sheet", sheet_id, presence_viewers) }}
+    </div>
+  </div>
+
+  <div class="cadence-card p-4 flex flex-wrap items-center gap-2">
+    <span class="text-xs font-semibold uppercase tracking-wider text-[var(--cadence-muted)] mr-2">Quick Emit:</span>
+    <button type="button" class="btn btn-xs btn-cadence" onclick="emitLiveTarget('attendance.updated', '{{ sheet_id }}')">
+      Advance Attendance Timeline
+    </button>
+    <button type="button" class="btn btn-xs btn-cadence-navy" onclick="emitLiveTarget('leave.updated', '{{ leave_id }}')">
+      Advance Leave Timeline
+    </button>
+    <button type="button" class="btn btn-xs btn-outline" onclick="emitLiveTarget('presence.updated', '{{ sheet_id }}')">
+      Toggle Reviewer Presence
+    </button>
+    <button type="button" class="btn btn-xs btn-outline" onclick="emitLiveTarget('notice.created', '')">
+      Emit Notice + Bump Bell
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    {{ render_status_timeline(
+      attendance_timeline,
+      sheet_id,
+      "/fragments/attendance/sheet/" ~ sheet_id ~ "/timeline",
+      "Attendance Sheet Approval Chain"
+    ) }}
+
+    {{ render_status_timeline(
+      leave_timeline,
+      leave_id,
+      "/fragments/leave/" ~ leave_id ~ "/timeline",
+      "Leave Request Chain"
+    ) }}
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  function emitLiveTarget(eventName, entityId) {
+    if (window.CadenceWS && typeof window.CadenceWS.emitDevFallback === "function") {
+      window.CadenceWS.emitDevFallback(eventName, { entity_id: entityId });
+    }
+  }
+</script>
+{% endblock %}

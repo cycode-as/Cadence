@@ -1,0 +1,30 @@
+{% macro render_presence_badge(entity, entity_id, viewers=None, summary_text=None) %}
+<div
+  id="presence-{{ entity_id }}"
+  hx-get="/fragments/presence/{{ entity }}/{{ entity_id }}"
+  hx-trigger="refresh"
+  hx-swap="outerHTML"
+  data-presence-entity="{{ entity }}"
+  data-presence-id="{{ entity_id }}"
+  class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs border border-[var(--cadence-border)] bg-[var(--cadence-surface)] shadow-sm"
+  aria-live="polite"
+>
+  {% set active_viewers = viewers if viewers is defined and viewers else [] %}
+  {% if summary_text %}
+    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+    <span class="font-medium">{{ summary_text }}</span>
+  {% elif active_viewers | length > 0 %}
+    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+    <span class="font-medium">
+      {{ active_viewers[0].name }}
+      {% if active_viewers | length > 1 %}
+        + {{ (active_viewers | length) - 1 }} other{{ 's' if (active_viewers | length) > 2 else '' }}
+      {% endif %}
+      {{ 'is' if (active_viewers | length) == 1 else 'are' }} reviewing this {{ entity | replace('_', ' ') }}
+    </span>
+  {% else %}
+    <span class="w-2 h-2 rounded-full bg-slate-400 shrink-0"></span>
+    <span class="text-[var(--cadence-muted)]">Only you are viewing right now</span>
+  {% endif %}
+</div>
+{% endmacro %}

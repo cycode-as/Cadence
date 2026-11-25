@@ -154,6 +154,7 @@
 
   <script src="/static/js/toast.js"></script>
   <script src="/static/js/ws.js"></script>
+  <script src="/static/js/presence.js"></script>
   <script src="/static/js/charts.js"></script>
   <script>
     // Attach CSRF token to all non-GET HTMX requests
@@ -199,21 +200,8 @@
 
     {% if dev_mode %}
     async function emitFakeWs(eventName) {
-      try {
-        const res = await fetch("/dev/emit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ event: eventName }),
-        });
-        if (!res.ok) throw new Error("Emit failed");
-      } catch (_err) {
-        if (window.CadenceWS) {
-          window.CadenceWS.emitLocal({
-            event: eventName,
-            scope_type: "BATTALION",
-            message: "Simulated locally (dev fallback).",
-          });
-        }
+      if (window.CadenceWS && typeof window.CadenceWS.emitDevFallback === "function") {
+        await window.CadenceWS.emitDevFallback(eventName);
       }
     }
     {% endif %}

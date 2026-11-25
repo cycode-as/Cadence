@@ -1,0 +1,77 @@
+{
+  "sheet_id": "77777777-7777-4777-8777-777777777703",
+  "leave_id": "55555555-5555-4555-8555-555555555501",
+  "presence_viewers": [
+    {
+      "id": "11111111-1111-4111-8111-111111111103",
+      "name": "JUO Rahul Deshmukh"
+    }
+  ],
+  "attendance_timeline": [
+    {
+      "step": "DRAFT",
+      "label": "Submitted by Squad Leader",
+      "actor": "Sgt. Vikram Singh",
+      "at": "2026-11-22T04:15:00Z",
+      "state": "done"
+    },
+    {
+      "step": "SUBMITTED",
+      "label": "Leader Submission Verified",
+      "actor": "Sgt. Vikram Singh",
+      "at": "2026-11-22T04:18:00Z",
+      "state": "done"
+    },
+    {
+      "step": "JUO_REVIEWED",
+      "label": "JUO Company Review",
+      "actor": "JUO Rahul Deshmukh",
+      "at": null,
+      "state": "current"
+    },
+    {
+      "step": "ANO_APPROVED",
+      "label": "ANO Contingent Approval",
+      "actor": null,
+      "at": null,
+      "state": "pending"
+    },
+    {
+      "step": "LOCKED",
+      "label": "Sheet Locked",
+      "actor": null,
+      "at": null,
+      "state": "pending"
+    }
+  ],
+  "leave_timeline": [
+    {
+      "step": "APPLIED",
+      "label": "Applied by Cadet",
+      "actor": "Cadet Arjun Nair",
+      "at": "2026-11-24T06:10:00Z",
+      "state": "done"
+    },
+    {
+      "step": "PENDING_LEADER",
+      "label": "Forwarded by Squad Leader",
+      "actor": "Sgt. Vikram Singh",
+      "at": "2026-11-24T08:05:00Z",
+      "state": "done"
+    },
+    {
+      "step": "PENDING_JUO",
+      "label": "JUO Verification",
+      "actor": "JUO Rahul Deshmukh",
+      "at": null,
+      "state": "current"
+    },
+    {
+      "step": "PENDING_ANO",
+      "label": "ANO Final Decision",
+      "actor": null,
+      "at": null,
+      "state": "pending"
+    }
+  ]
+}

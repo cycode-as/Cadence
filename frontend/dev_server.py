@@ -21,6 +21,7 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 from frontend.pages.common import (
     STATIC_DIR,
     dev_bell_delta,
+    load_fixture,
     render_page,
     resolve_dev_role,
 )
@@ -29,6 +30,40 @@ from frontend.pages.dashboards import router as dashboards_router
 app = FastAPI(title="CADENCE Frontend Dev Server", docs_url="/dev/docs")
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.include_router(dashboards_router)
+
+
+def _advance_timeline_steps(steps: list[dict[str, Any]]) -> None:
+    """Advance the active 'current' step to 'done' for live dev simulation."""
+    now_iso = datetime.now(timezone.utc).isoformat()
+    for idx, step in enumerate(steps):
+        if step.get("state") == "current":
+            step["state"] = "done"
+            step["at"] = now_iso
+            if not step.get("actor"):
+                step["actor"] = "Lt. Meera Iyer (ANO)"
+            if idx + 1 < len(steps):
+                steps[idx + 1]["state"] = "current"
+            return
+    # Reset back to step 2 current if already completed
+    for idx, step in enumerate(steps):
+        if idx < 2:
+            step["state"] = "done"
+        elif idx == 2:
+            step["state"] = "current"
+            step["at"] = None
+        else:
+            step["state"] = "pending"
+            step["at"] = None
+
+
+_dev_live_state: dict[str, Any] | None = None
+
+
+def _get_live_state() -> dict[str, Any]:
+    global _dev_live_state
+    if _dev_live_state is None:
+        _dev_live_state = load_fixture("dev_live.json")
+    return _dev_live_state
 
 
 class DevWebSocketHub:
@@ -208,20 +243,90 @@ def fragment_bell(request: Request) -> HTMLResponse:
     return render_page(request, "components/bell.html")
 
 
+@app.get("/dev/live", response_class=HTMLResponse)
+def dev_live_preview(request: Request) -> HTMLResponse:
+    state = _get_live_state()
+    return render_page(request, "dev_live.html", extra=state)
+
+
+@app.get("/fragments/attendance/sheet/{sheet_id}/timeline", response_class=HTMLResponse)
+def fragment_sheet_timeline(request: Request, sheet_id: str) -> HTMLResponse:
+    state = _get_live_state()
+    return render_page(
+        request,
+        "fragments/timeline.html",
+        extra={
+            "timeline": state["attendance_timeline"],
+            "entity_id": sheet_id,
+            "refresh_url": f"/fragments/attendance/sheet/{sheet_id}/timeline",
+            "title": "Attendance Sheet Approval Chain",
+        },
+    )
+
+
+@app.get("/fragments/leave/{leave_id}/timeline", response_class=HTMLResponse)
+def fragment_leave_timeline(request: Request, leave_id: str) -> HTMLResponse:
+    state = _get_live_state()
+    return render_page(
+        request,
+        "fragments/timeline.html",
+        extra={
+            "timeline": state["leave_timeline"],
+            "entity_id": leave_id,
+            "refresh_url": f"/fragments/leave/{leave_id}/timeline",
+            "title": "Leave Request Chain",
+        },
+    )
+
+
+@app.get("/fragments/presence/{entity}/{entity_id}", response_class=HTMLResponse)
+def fragment_presence(request: Request, entity: str, entity_id: str) -> HTMLResponse:
+    state = _get_live_state()
+    return render_page(
+        request,
+        "fragments/presence.html",
+        extra={
+            "entity": entity,
+            "entity_id": entity_id,
+            "viewers": state["presence_viewers"],
+        },
+    )
+
+
 @app.post("/dev/emit", response_class=JSONResponse)
 def dev_emit_event(body: dict[str, Any]) -> JSONResponse:
+    state = _get_live_state()
     event_name = str(body.get("event", "dashboard.refresh"))
+    entity_id = body.get("entity_id")
+
     if event_name == "notice.created":
         dev_bell_delta["unread_notices"] += 1
-    elif event_name in {"attendance.updated", "leave.updated"}:
+        entity_id = entity_id or ""
+    elif event_name == "attendance.updated":
         dev_bell_delta["pending_actions"] += 1
+        entity_id = entity_id or state["sheet_id"]
+        _advance_timeline_steps(state["attendance_timeline"])
+    elif event_name == "leave.updated":
+        dev_bell_delta["pending_actions"] += 1
+        entity_id = entity_id or state["leave_id"]
+        _advance_timeline_steps(state["leave_timeline"])
+    elif event_name == "presence.updated":
+        entity_id = entity_id or state["sheet_id"]
+        if len(state["presence_viewers"]) == 1:
+            state["presence_viewers"].append(
+                {"id": "11111111-1111-4111-8111-111111111104", "name": "Lt. Meera Iyer (ANO)"}
+            )
+        else:
+            state["presence_viewers"] = state["presence_viewers"][:1]
+    else:
+        entity_id = entity_id or state["sheet_id"]
 
     payload = {
         "event": event_name,
         "scope_type": "COMPANY",
         "scope_id": "22222222-2222-4222-8222-222222222201",
-        "entity": "attendance_sheet" if "attendance" in event_name else "unit_event",
-        "entity_id": "33333333-3333-4333-8333-333333333301",
+        "entity": "attendance_sheet" if ("attendance" in event_name or "presence" in event_name) else "unit_event",
+        "entity_id": entity_id,
         "actor_id": "11111111-1111-4111-8111-111111111103",
         "at": datetime.now(timezone.utc).isoformat(),
         "message": f"Simulated {event_name} event from Dev Panel",

@@ -1,7 +1,8 @@
 /**
- * CADENCE WebSocket Client (connects to /ws with exponential backoff).
- * Handles live event notifications, HTMX fragment refreshes, bell updates,
- * and close code 4401 (unauthenticated -> redirect to /login).
+ * CADENCE WebSocket Client (Section 8.4).
+ * Connects to /ws with exponential backoff, redirects on close code 4401,
+ * falls back to dev emitter when disconnected in dev mode, maps events to
+ * HTMX fragment refreshes, triggers toasts, bumps #bell, and notifies charts.
  */
 (function () {
   const EVENT_LABELS = {
@@ -14,22 +15,25 @@
 
   let socket = null;
   let retryDelayMs = 1000;
+  let reconnectTimer = null;
   const MAX_RETRY_MS = 30000;
 
   function resolveTargets(payload) {
     const targets = ["#bell"];
     const eid = payload.entity_id;
+
     switch (payload.event) {
       case "dashboard.refresh":
         targets.push("#stat-cards");
         break;
       case "attendance.updated":
+        targets.push("#stat-cards");
         if (eid) {
           targets.push(`#sheet-${eid}`, `#timeline-${eid}`);
         }
         break;
       case "leave.updated":
-        targets.push("#leave-queue");
+        targets.push("#leave-queue", "#stat-cards");
         if (eid) {
           targets.push(`#timeline-${eid}`);
         }
@@ -56,7 +60,7 @@
       type: "info",
     };
 
-    if (window.CadenceToast) {
+    if (window.CadenceToast && payload.event !== "presence.updated") {
       const scopeInfo = payload.scope_type ? `Scope: ${payload.scope_type}` : "";
       window.CadenceToast.show({
         title: meta.title,
@@ -97,6 +101,9 @@
   function connect() {
     const body = document.body;
     if (!body || body.dataset.wsEnabled !== "true") return;
+    if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) {
+      return;
+    }
 
     const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
     const url = `${proto}//${window.location.host}/ws`;
@@ -112,6 +119,7 @@
     socket.addEventListener("open", () => {
       retryDelayMs = 1000;
       updateWsBadge("connected");
+      document.dispatchEvent(new CustomEvent("cadence:ws-open"));
     });
 
     socket.addEventListener("message", (evt) => {
@@ -119,7 +127,7 @@
         const data = JSON.parse(evt.data);
         handleIncomingEvent(data);
       } catch (_err) {
-        // Ignore malformed frame
+        // Ignore non-JSON frame
       }
     });
 
@@ -138,7 +146,9 @@
   }
 
   function scheduleReconnect() {
-    window.setTimeout(() => {
+    if (reconnectTimer) return;
+    reconnectTimer = window.setTimeout(() => {
+      reconnectTimer = null;
       retryDelayMs = Math.min(retryDelayMs * 2, MAX_RETRY_MS);
       connect();
     }, retryDelayMs);
@@ -152,10 +162,39 @@
     return false;
   }
 
+  async function emitDevFallback(eventName, extras = {}) {
+    try {
+      const res = await fetch("/dev/emit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event: eventName, ...extras }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (!socket || socket.readyState !== WebSocket.OPEN) {
+          handleIncomingEvent(data.emitted || { event: eventName, ...extras });
+        }
+        return true;
+      }
+    } catch (_err) {
+      // Ignore network errors and trigger locally below
+    }
+    handleIncomingEvent({
+      event: eventName,
+      scope_type: "BATTALION",
+      message: `Simulated ${eventName} locally (dev fallback)`,
+      ...extras,
+    });
+    return false;
+  }
+
   document.addEventListener("DOMContentLoaded", connect);
 
   window.CadenceWS = {
+    connect,
     send,
     emitLocal: handleIncomingEvent,
+    emitDevFallback,
+    isConnected: () => Boolean(socket && socket.readyState === WebSocket.OPEN),
   };
 })();

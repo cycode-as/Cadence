@@ -1,0 +1,2 @@
+{% from "components/status_timeline.html" import render_status_timeline %}
+{{ render_status_timeline(timeline, entity_id, refresh_url, title | default("Approval Timeline")) }}

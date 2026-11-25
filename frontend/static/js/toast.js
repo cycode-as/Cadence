@@ -1,5 +1,6 @@
 /**
  * CADENCE Toast Notification Manager
+ * Handles programmatic toasts and global HTMX HTTP error toasts (403, 409, 5xx).
  */
 (function () {
   const TYPE_CLASSES = {
@@ -20,7 +21,14 @@
     return document.getElementById("toast-container");
   }
 
-  function show({ title = "Update", message = "", type = "info", duration = 4500 } = {}) {
+  function show({
+    title = "Update",
+    message = "",
+    type = "info",
+    duration = 4500,
+    actionLabel = null,
+    onAction = null,
+  } = {}) {
     const container = getContainer();
     if (!container) return;
 
@@ -55,6 +63,18 @@
       body.appendChild(text);
     }
 
+    if (actionLabel && typeof onAction === "function") {
+      const actionBtn = document.createElement("button");
+      actionBtn.type = "button";
+      actionBtn.className = "btn btn-xs btn-outline mt-2";
+      actionBtn.textContent = actionLabel;
+      actionBtn.addEventListener("click", () => {
+        onAction();
+        item.remove();
+      });
+      body.appendChild(actionBtn);
+    }
+
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
     closeBtn.className = "btn btn-ghost btn-xs px-1.5";
@@ -72,6 +92,44 @@
       }, duration);
     }
   }
+
+  // Global HTMX error feedback (409 Conflict -> reload prompt, 403 -> scope error)
+  document.addEventListener("htmx:responseError", (evt) => {
+    const xhr = evt.detail && evt.detail.xhr;
+    if (!xhr) return;
+    let errMsg = "";
+    try {
+      const parsed = JSON.parse(xhr.responseText);
+      errMsg = parsed && parsed.error && parsed.error.message ? parsed.error.message : "";
+    } catch (_e) {
+      errMsg = "";
+    }
+
+    if (xhr.status === 409) {
+      show({
+        title: "Conflict Detected",
+        message: errMsg || "This sheet changed, reload to see the latest version.",
+        type: "warning",
+        duration: 8000,
+        actionLabel: "Reload",
+        onAction: () => window.location.reload(),
+      });
+    } else if (xhr.status === 403) {
+      show({
+        title: "Access Restricted",
+        message: errMsg || "This record is outside your unit scope.",
+        type: "error",
+      });
+    } else if (xhr.status === 401) {
+      window.location.href = "/login";
+    } else if (xhr.status >= 500) {
+      show({
+        title: "Server Error",
+        message: errMsg || "Could not complete the request. Please try again.",
+        type: "error",
+      });
+    }
+  });
 
   window.CadenceToast = { show };
 })();

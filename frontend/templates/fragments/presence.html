@@ -1,0 +1,2 @@
+{% from "components/presence_badge.html" import render_presence_badge %}
+{{ render_presence_badge(entity, entity_id, viewers | default([]), summary_text | default(None)) }}
