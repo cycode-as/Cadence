@@ -27,21 +27,25 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     <div class="cadence-card p-5">
-      <h2 class="font-bold text-base mb-2">Authentication Screens</h2>
+      <h2 class="font-bold text-base mb-2">Role Dashboards (Phase 2)</h2>
+      <ul class="space-y-1.5 text-sm">
+        <li><a href="/dashboard/cadet?role=CADET" class="link text-[var(--cadence-olive)]">Cadet Dashboard (/dashboard/cadet)</a></li>
+        <li><a href="/dashboard/leader?role=CADET_LEADER" class="link text-[var(--cadence-olive)]">Cadet Leader Dashboard (/dashboard/leader)</a></li>
+        <li><a href="/dashboard/juo?role=JUO" class="link text-[var(--cadence-olive)]">JUO Dashboard (/dashboard/juo)</a></li>
+        <li><a href="/dashboard/ano?role=ANO" class="link text-[var(--cadence-olive)]">ANO Dashboard (/dashboard/ano)</a></li>
+        <li><a href="/dashboard/co?role=CO" class="link text-[var(--cadence-olive)]">CO Dashboard (/dashboard/co)</a></li>
+      </ul>
+    </div>
+
+    <div class="cadence-card p-5">
+      <h2 class="font-bold text-base mb-2">Authentication &amp; Error Templates</h2>
       <ul class="space-y-1.5 text-sm">
         <li><a href="/login" class="link text-[var(--cadence-olive)]">Login Screen (/login)</a></li>
         <li><a href="/mfa/setup" class="link text-[var(--cadence-olive)]">MFA TOTP Setup (/mfa/setup)</a></li>
         <li><a href="/mfa/verify" class="link text-[var(--cadence-olive)]">MFA Verify &amp; Email OTP (/mfa/verify)</a></li>
         <li><a href="/change-password" class="link text-[var(--cadence-olive)]">Change Password (/change-password)</a></li>
-      </ul>
-    </div>
-
-    <div class="cadence-card p-5">
-      <h2 class="font-bold text-base mb-2">Error Templates</h2>
-      <ul class="space-y-1.5 text-sm">
         <li><a href="/errors/403" class="link text-[var(--cadence-olive)]">403 Forbidden (/errors/403)</a></li>
         <li><a href="/errors/404" class="link text-[var(--cadence-olive)]">404 Not Found (/errors/404)</a></li>
-        <li><a href="/errors/500" class="link text-[var(--cadence-olive)]">500 Server Error (/errors/500)</a></li>
       </ul>
     </div>
 

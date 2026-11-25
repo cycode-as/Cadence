@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% from "components/chart_card.html" import render_chart_card %}
+{% from "components/empty_state.html" import render_empty %}
+
+{% block title %}Commanding Officer Dashboard — CADENCE{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <span class="badge badge-sm badge-khaki">Commanding Officer &middot; Battalion Scope</span>
+      <h1 class="text-2xl font-bold mt-1">{{ battalion.name }}</h1>
+      <p class="text-sm text-[var(--cadence-muted)]">
+        {{ battalion.contingents_count }} College Contingents &middot; {{ battalion.total_strength }} Cadets &middot; Avg Attendance {{ battalion.avg_attendance_pct }}%
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="/reports" class="btn btn-sm btn-cadence">Battalion Reports</a>
+      <a href="/admin/audit" class="btn btn-sm btn-outline">Audit Log</a>
+    </div>
+  </div>
+
+  {% include "fragments/dashboard_cards.html" %}
+
+  {{ render_chart_card(
+    chart_id="co-battalion-by-contingent",
+    title="Attendance by College Contingent",
+    subtitle="Comparative parade attendance across battalion contingents",
+    chart_config=charts.battalion_by_contingent
+  ) }}
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <section class="cadence-card p-5" aria-labelledby="co-comparison-heading">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="co-comparison-heading" class="text-base font-bold">Contingent Comparison</h2>
+        <a href="/reports" class="link text-xs text-[var(--cadence-olive)]">Drill Down</a>
+      </div>
+      {% if contingent_comparison %}
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Contingent</th>
+              <th>Strength</th>
+              <th>Attendance</th>
+              <th>Pending</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in contingent_comparison %}
+            <tr>
+              <td>
+                <div class="font-medium">{{ row.name }}</div>
+                <div class="text-xs text-[var(--cadence-muted)]">ANO: {{ row.ano_name }}</div>
+              </td>
+              <td>{{ row.strength }}</td>
+              <td>
+                <span class="badge badge-xs {{ 'badge-success' if row.attendance_pct >= 85 else 'badge-warning' }}">
+                  {{ row.attendance_pct }}%
+                </span>
+              </td>
+              <td>{{ row.pending_approvals }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        {{ render_empty("No contingent metrics", "No contingent records available for this battalion.") }}
+      {% endif %}
+    </section>
+
+    <section class="cadence-card p-5" aria-labelledby="co-escalations-heading">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="co-escalations-heading" class="text-base font-bold">Leave Escalations to CO</h2>
+        <a href="/leave" class="link text-xs text-[var(--cadence-olive)]">Open Queue</a>
+      </div>
+      {% if escalations %}
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Cadet &amp; Contingent</th>
+              <th>Dates</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for esc in escalations %}
+            <tr>
+              <td>
+                <div class="font-medium">{{ esc.cadet_name }}</div>
+                <div class="text-xs text-[var(--cadence-muted)]">{{ esc.contingent_name }} &middot; {{ esc.escalation_reason }}</div>
+              </td>
+              <td class="text-xs">{{ esc.from_date }} &rarr; {{ esc.to_date }}</td>
+              <td class="text-right">
+                {% if "DECIDE" in esc.allowed_actions or "VIEW" in esc.allowed_actions %}
+                <a href="/leave/{{ esc.id }}" class="btn btn-xs btn-cadence">Review</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        {{ render_empty("No escalations", "No leave applications escalated to Battalion HQ.") }}
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

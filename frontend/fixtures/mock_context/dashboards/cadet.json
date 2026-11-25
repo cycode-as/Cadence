@@ -1,0 +1,72 @@
+{
+  "attendance_pct": 88.5,
+  "next_parade": {
+    "id": "44444444-4444-4444-8444-444444444401",
+    "title": "Sunday Morning Drill & Weapon Training",
+    "scheduled_at": "2026-11-29T01:30:00Z",
+    "venue": "Battalion Parade Ground, Colaba",
+    "dress_code": "Khaki Uniform + Beret"
+  },
+  "unread_notices": 2,
+  "leave_summary": {
+    "pending": 1,
+    "approved": 2,
+    "rejected": 0,
+    "latest": {
+      "id": "55555555-5555-4555-8555-555555555501",
+      "dates": "2026-12-06 to 2026-12-06",
+      "status": "PENDING_JUO"
+    }
+  },
+  "stat_cards": [
+    {
+      "label": "My Attendance",
+      "value": "88.5%",
+      "subtitle": "23 of 26 parades attended (75% min)",
+      "badge_text": "Eligible",
+      "badge_variant": "badge-success",
+      "href": "/attendance/history",
+      "accent": "emerald"
+    },
+    {
+      "label": "Next Parade",
+      "value": "Sun, 29 Nov",
+      "subtitle": "07:00 AM IST · Parade Ground",
+      "badge_text": "Sunday Drill",
+      "badge_variant": "badge-khaki",
+      "href": "/attendance/history",
+      "accent": "olive"
+    },
+    {
+      "label": "Unread Notices",
+      "value": "2",
+      "subtitle": "From Alpha Coy & Battalion HQ",
+      "badge_text": "Unread",
+      "badge_variant": "badge-warning",
+      "href": "/notices",
+      "accent": "amber"
+    },
+    {
+      "label": "Leave Requests",
+      "value": "1 Pending",
+      "subtitle": "2 approved this training year",
+      "badge_text": "Active",
+      "badge_variant": "badge-info",
+      "href": "/leave",
+      "accent": "navy"
+    }
+  ],
+  "charts": {
+    "attendance_trend": {
+      "type": "line",
+      "suggested_max": 100,
+      "labels": ["Jul", "Aug", "Sep", "Oct", "Nov"],
+      "datasets": [
+        {
+          "label": "Attendance %",
+          "data": [82.0, 85.5, 86.0, 90.0, 88.5]
+        }
+      ]
+    }
+  }
+}

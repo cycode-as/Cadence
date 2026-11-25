@@ -1,0 +1,98 @@
+{
+  "contingent": {
+    "id": "88888888-8888-4888-8888-888888888801",
+    "name": "St. Xavier's Contingent",
+    "battalion_name": "1st Maharashtra Bn NCC",
+    "companies_count": 3
+  },
+  "roster_counts": {
+    "total": 214,
+    "sd": 128,
+    "sw": 86,
+    "active": 208,
+    "on_leave": 6
+  },
+  "approvals_pending": [
+    {
+      "kind": "Attendance",
+      "title": "Alpha Coy — Squad 1 (Sunday Drill)",
+      "subtitle": "Reviewed by JUO Rahul Deshmukh",
+      "status": "JUO_REVIEWED",
+      "href": "/attendance/sheet/77777777-7777-4777-8777-777777777703",
+      "allowed_actions": ["OPEN", "APPROVE"]
+    },
+    {
+      "kind": "Leave",
+      "title": "Cadet Devika Sharma (Bravo Coy)",
+      "subtitle": "Inter-University Debate · 29 Nov",
+      "status": "PENDING_ANO",
+      "href": "/leave/55555555-5555-4555-8555-555555555505",
+      "allowed_actions": ["DECIDE", "VIEW"]
+    },
+    {
+      "kind": "Attendance",
+      "title": "Bravo Coy — Squad 2 (Sunday Drill)",
+      "subtitle": "Reviewed by JUO Aditya Nair",
+      "status": "JUO_REVIEWED",
+      "href": "/attendance/sheet/77777777-7777-4777-8777-777777777705",
+      "allowed_actions": ["OPEN", "APPROVE"]
+    }
+  ],
+  "stat_cards": [
+    {
+      "label": "Contingent Strength",
+      "value": "214",
+      "subtitle": "128 SD · 86 SW across 3 companies",
+      "badge_text": "Enrolled",
+      "badge_variant": "badge-khaki",
+      "href": "/admin/roster",
+      "accent": "navy"
+    },
+    {
+      "label": "Pending Approvals",
+      "value": "3",
+      "subtitle": "2 Attendance Sheets · 1 Leave",
+      "badge_text": "ANO Sign-Off",
+      "badge_variant": "badge-warning",
+      "href": "/attendance/review",
+      "accent": "amber"
+    },
+    {
+      "label": "Contingent Attendance",
+      "value": "89.6%",
+      "subtitle": "Trailing 30-day average",
+      "badge_text": "On Target",
+      "badge_variant": "badge-success",
+      "href": "/reports",
+      "accent": "emerald"
+    },
+    {
+      "label": "On Approved Leave",
+      "value": "6",
+      "subtitle": "Auto-marked LEAVE in sheets",
+      "badge_text": "Active",
+      "badge_variant": "badge-info",
+      "href": "/leave",
+      "accent": "olive"
+    }
+  ],
+  "charts": {
+    "contingent_trend": {
+      "type": "line",
+      "suggested_max": 100,
+      "labels": ["Week 1", "Week 2", "Week 3", "Week 4"],
+      "datasets": [
+        { "label": "Alpha Coy", "data": [89, 91, 90, 92], "color": "#4A5D23", "fill": false },
+        { "label": "Bravo Coy", "data": [84, 86, 85, 88], "color": "#1B2A4A", "fill": false },
+        { "label": "Charlie Coy", "data": [87, 88, 90, 89], "color": "#D97706", "fill": false }
+      ]
+    },
+    "leave_stats": {
+      "type": "doughnut",
+      "labels": ["Approved", "Pending", "Rejected"],
+      "datasets": [
+        { "label": "Leave Requests", "data": [18, 4, 3] }
+      ]
+    }
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "company": {
+    "id": "22222222-2222-4222-8222-222222222201",
+    "name": "Alpha Company",
+    "contingent_name": "St. Xavier's Contingent",
+    "squads_count": 4,
+    "strength": 72
+  },
+  "sheets_to_review": [
+    {
+      "id": "77777777-7777-4777-8777-777777777703",
+      "squad_name": "Squad 1 (Sgt. Vikram Singh)",
+      "parade_title": "Sunday Drill — 22 Nov",
+      "submitted_at": "2026-11-22T04:15:00Z",
+      "status": "SUBMITTED",
+      "allowed_actions": ["OPEN", "REVIEW"]
+    },
+    {
+      "id": "77777777-7777-4777-8777-777777777704",
+      "squad_name": "Squad 2 (Cpl. Kavya Rao)",
+      "parade_title": "Sunday Drill — 22 Nov",
+      "submitted_at": "2026-11-22T04:40:00Z",
+      "status": "SUBMITTED",
+      "allowed_actions": ["OPEN", "REVIEW"]
+    }
+  ],
+  "leave_queue": [
+    {
+      "id": "55555555-5555-4555-8555-555555555501",
+      "cadet_name": "Cadet Arjun Nair",
+      "squad_name": "Squad 1",
+      "from_date": "2026-12-06",
+      "to_date": "2026-12-06",
+      "status": "PENDING_JUO",
+      "allowed_actions": ["FORWARD", "VIEW"]
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555504",
+      "cadet_name": "Cadet Neha Kulkarni",
+      "squad_name": "Squad 3",
+      "from_date": "2026-11-29",
+      "to_date": "2026-11-29",
+      "status": "PENDING_JUO",
+      "allowed_actions": ["FORWARD", "VIEW"]
+    }
+  ],
+  "stat_cards": [
+    {
+      "label": "Company Strength",
+      "value": "72",
+      "subtitle": "Across 4 squads in Alpha Coy",
+      "badge_text": "Alpha Coy",
+      "badge_variant": "badge-khaki",
+      "accent": "navy"
+    },
+    {
+      "label": "Sheets to Review",
+      "value": "2",
+      "subtitle": "Submitted by Squad Leaders",
+      "badge_text": "Action Due",
+      "badge_variant": "badge-warning",
+      "href": "/attendance/review",
+      "accent": "amber"
+    },
+    {
+      "label": "Leave Queue",
+      "value": "2",
+      "subtitle": "Forwarded for JUO verification",
+      "badge_text": "Pending JUO",
+      "badge_variant": "badge-info",
+      "href": "/leave",
+      "accent": "olive"
+    },
+    {
+      "label": "Company Avg",
+      "value": "90.4%",
+      "subtitle": "Last 4 parades combined",
+      "badge_text": "+2.1%",
+      "badge_variant": "badge-success",
+      "href": "/reports",
+      "accent": "emerald"
+    }
+  ],
+  "charts": {
+    "company_by_squad": {
+      "type": "bar",
+      "suggested_max": 100,
+      "labels": ["Squad 1", "Squad 2", "Squad 3", "Squad 4"],
+      "datasets": [
+        { "label": "Attendance %", "data": [91.8, 88.4, 93.1, 88.3], "color": "#4A5D23" }
+      ]
+    }
+  }
+}

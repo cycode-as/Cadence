@@ -1,0 +1,111 @@
+{
+  "battalion": {
+    "id": "99999999-9999-4999-8999-999999999901",
+    "name": "1st Maharashtra Bn NCC",
+    "contingents_count": 4,
+    "total_strength": 842,
+    "avg_attendance_pct": 88.9
+  },
+  "contingent_comparison": [
+    {
+      "id": "88888888-8888-4888-8888-888888888801",
+      "name": "St. Xavier's Contingent",
+      "ano_name": "Lt. Meera Iyer",
+      "strength": 214,
+      "attendance_pct": 89.6,
+      "pending_approvals": 2
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888802",
+      "name": "Elphinstone College Contingent",
+      "ano_name": "Capt. Suresh Menon",
+      "strength": 208,
+      "attendance_pct": 91.2,
+      "pending_approvals": 1
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888803",
+      "name": "Ruia College Contingent",
+      "ano_name": "Lt. Priya Gokhale",
+      "strength": 225,
+      "attendance_pct": 84.5,
+      "pending_approvals": 4
+    },
+    {
+      "id": "88888888-8888-4888-8888-888888888804",
+      "name": "Jai Hind College Contingent",
+      "ano_name": "Lt. Nikhil Rao",
+      "strength": 195,
+      "attendance_pct": 90.1,
+      "pending_approvals": 0
+    }
+  ],
+  "escalations": [
+    {
+      "id": "55555555-5555-4555-8555-555555555506",
+      "cadet_name": "Sgt. Aarav Kulkarni",
+      "contingent_name": "Ruia College Contingent",
+      "from_date": "2026-12-01",
+      "to_date": "2026-12-10",
+      "escalation_reason": "Extended medical leave (>7 days)",
+      "allowed_actions": ["DECIDE", "VIEW"]
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555507",
+      "cadet_name": "Cadet Tanvi Sawant",
+      "contingent_name": "St. Xavier's Contingent",
+      "from_date": "2026-12-03",
+      "to_date": "2026-12-08",
+      "escalation_reason": "National sports trials",
+      "allowed_actions": ["DECIDE", "VIEW"]
+    }
+  ],
+  "stat_cards": [
+    {
+      "label": "Battalion Strength",
+      "value": "842",
+      "subtitle": "4 College Contingents",
+      "badge_text": "Army Wing",
+      "badge_variant": "badge-khaki",
+      "href": "/admin/roster",
+      "accent": "navy"
+    },
+    {
+      "label": "Battalion Avg Attendance",
+      "value": "88.9%",
+      "subtitle": "Across all Sunday & midweek drills",
+      "badge_text": "+1.4%",
+      "badge_variant": "badge-success",
+      "href": "/reports",
+      "accent": "emerald"
+    },
+    {
+      "label": "CO Escalations",
+      "value": "2",
+      "subtitle": "Long-duration leave requests",
+      "badge_text": "Command Review",
+      "badge_variant": "badge-warning",
+      "href": "/leave",
+      "accent": "amber"
+    },
+    {
+      "label": "Audit Events (24h)",
+      "value": "47",
+      "subtitle": "Sheet locks, approvals, roster moves",
+      "badge_text": "Logged",
+      "badge_variant": "badge-info",
+      "href": "/admin/audit",
+      "accent": "olive"
+    }
+  ],
+  "charts": {
+    "battalion_by_contingent": {
+      "type": "bar",
+      "suggested_max": 100,
+      "labels": ["St. Xavier's", "Elphinstone", "Ruia College", "Jai Hind"],
+      "datasets": [
+        { "label": "Attendance %", "data": [89.6, 91.2, 84.5, 90.1], "color": "#1B2A4A" }
+      ]
+    }
+  }
+}

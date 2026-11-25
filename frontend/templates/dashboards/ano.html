@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% from "components/chart_card.html" import render_chart_card %}
+{% from "components/empty_state.html" import render_empty %}
+
+{% block title %}ANO Dashboard — CADENCE{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <span class="badge badge-sm badge-khaki">ANO &middot; Contingent Admin</span>
+      <h1 class="text-2xl font-bold mt-1">{{ contingent.name }}</h1>
+      <p class="text-sm text-[var(--cadence-muted)]">
+        {{ contingent.battalion_name }} &middot; {{ contingent.companies_count }} Companies &middot; {{ roster_counts.total }} Enrolled Cadets
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="/admin/roster" class="btn btn-sm btn-cadence">Manage Roster</a>
+      <a href="/admin/import" class="btn btn-sm btn-outline">CSV Import</a>
+      <a href="/reports" class="btn btn-sm btn-outline">Reports</a>
+    </div>
+  </div>
+
+  {% include "fragments/dashboard_cards.html" %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      {{ render_chart_card(
+        chart_id="ano-contingent-trend",
+        title="Contingent Attendance Trend",
+        subtitle="Weekly parade attendance across companies",
+        chart_config=charts.contingent_trend
+      ) }}
+    </div>
+    <div>
+      {{ render_chart_card(
+        chart_id="ano-leave-stats",
+        title="Leave Distribution",
+        subtitle="Current month leave outcomes",
+        chart_config=charts.leave_stats
+      ) }}
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <section class="cadence-card p-5" aria-labelledby="roster-breakdown-heading">
+      <h2 id="roster-breakdown-heading" class="text-base font-bold mb-3">Roster Composition</h2>
+      <dl class="space-y-2.5 text-sm">
+        <div class="flex items-center justify-between py-1.5 border-b border-[var(--cadence-border)]">
+          <dt class="text-[var(--cadence-muted)]">Total Enrolled</dt>
+          <dd class="font-bold">{{ roster_counts.total }}</dd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-[var(--cadence-border)]">
+          <dt class="text-[var(--cadence-muted)]">Senior Division (SD)</dt>
+          <dd class="font-semibold">{{ roster_counts.sd }}</dd>
+        </div>
+        <div class="flex items-center justify-between py-1.5 border-b border-[var(--cadence-border)]">
+          <dt class="text-[var(--cadence-muted)]">Senior Wing (SW)</dt>
+          <dd class="font-semibold">{{ roster_counts.sw }}</dd>
+        </div>
+        <div class="flex items-center justify-between py-1.5">
+          <dt class="text-[var(--cadence-muted)]">Currently On Leave</dt>
+          <dd class="badge badge-sm badge-info">{{ roster_counts.on_leave }}</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="cadence-card p-5 lg:col-span-2" aria-labelledby="ano-approvals-heading">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="ano-approvals-heading" class="text-base font-bold">Approvals Pending ANO Sign-Off</h2>
+        <a href="/attendance/review" class="link text-xs text-[var(--cadence-olive)]">View Queue</a>
+      </div>
+      {% if approvals_pending %}
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Unit / Subject</th>
+              <th>Stage</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in approvals_pending %}
+            <tr>
+              <td><span class="badge badge-xs badge-outline">{{ item.kind }}</span></td>
+              <td>
+                <div class="font-medium">{{ item.title }}</div>
+                <div class="text-xs text-[var(--cadence-muted)]">{{ item.subtitle }}</div>
+              </td>
+              <td><span class="badge badge-xs badge-warning">{{ item.status }}</span></td>
+              <td class="text-right">
+                {% if "APPROVE" in item.allowed_actions or "DECIDE" in item.allowed_actions or "OPEN" in item.allowed_actions %}
+                <a href="{{ item.href }}" class="btn btn-xs btn-cadence">Decide</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        {{ render_empty("All approvals clear", "No attendance sheets or leave requests awaiting ANO approval.") }}
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

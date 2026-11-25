@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% from "components/chart_card.html" import render_chart_card %}
+{% from "components/empty_state.html" import render_empty %}
+
+{% block title %}Cadet Dashboard — CADENCE{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <span class="badge badge-sm badge-khaki">Cadet View &middot; {{ user.rank }}</span>
+      <h1 class="text-2xl font-bold mt-1">Welcome, {{ user.full_name }}</h1>
+      <p class="text-sm text-[var(--cadence-muted)]">{{ user.scope_name }}</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="/leave/apply" class="btn btn-sm btn-cadence">Apply for Leave</a>
+      <a href="/attendance/history" class="btn btn-sm btn-outline">Attendance History</a>
+    </div>
+  </div>
+
+  {% include "fragments/dashboard_cards.html" %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      {{ render_chart_card(
+        chart_id="cadet-attendance-trend",
+        title="My Parade Attendance Trend",
+        subtitle="Percentage across recent battalion & company parades",
+        chart_config=charts.attendance_trend
+      ) }}
+    </div>
+
+    <div class="space-y-4">
+      <section class="cadence-card p-5" aria-labelledby="next-parade-heading">
+        <h2 id="next-parade-heading" class="text-base font-bold">Next Scheduled Parade</h2>
+        {% if next_parade %}
+        <div class="mt-3 space-y-2 text-sm">
+          <div class="font-semibold text-[var(--cadence-olive)]">{{ next_parade.title }}</div>
+          <div class="text-xs text-[var(--cadence-muted)]">
+            {{ next_parade.scheduled_at | format_ist }}
+          </div>
+          <div class="flex items-center justify-between text-xs pt-2 border-t border-[var(--cadence-border)]">
+            <span>Venue: <strong>{{ next_parade.venue }}</strong></span>
+            <span class="badge badge-xs badge-khaki">{{ next_parade.dress_code | default("FSM") }}</span>
+          </div>
+        </div>
+        {% else %}
+        <p class="text-sm text-[var(--cadence-muted)] mt-2">No upcoming parade scheduled.</p>
+        {% endif %}
+      </section>
+
+      <section class="cadence-card p-5" aria-labelledby="leave-summary-heading">
+        <div class="flex items-center justify-between">
+          <h2 id="leave-summary-heading" class="text-base font-bold">Leave Summary</h2>
+          <a href="/leave" class="link text-xs text-[var(--cadence-olive)]">All Requests</a>
+        </div>
+        <div class="grid grid-cols-3 gap-2 mt-3 text-center">
+          <div class="p-2 rounded bg-[var(--cadence-khaki-light)]">
+            <div class="text-lg font-bold">{{ leave_summary.pending }}</div>
+            <div class="text-[11px] text-[var(--cadence-muted)]">Pending</div>
+          </div>
+          <div class="p-2 rounded bg-emerald-500/10">
+            <div class="text-lg font-bold text-emerald-700 dark:text-emerald-400">{{ leave_summary.approved }}</div>
+            <div class="text-[11px] text-[var(--cadence-muted)]">Approved</div>
+          </div>
+          <div class="p-2 rounded bg-rose-500/10">
+            <div class="text-lg font-bold text-rose-700 dark:text-rose-400">{{ leave_summary.rejected }}</div>
+            <div class="text-[11px] text-[var(--cadence-muted)]">Rejected</div>
+          </div>
+        </div>
+        {% if leave_summary.latest %}
+        <div class="mt-3 pt-3 border-t border-[var(--cadence-border)] text-xs flex items-center justify-between gap-2">
+          <span class="truncate">{{ leave_summary.latest.dates }}</span>
+          <a href="/leave/{{ leave_summary.latest.id }}" class="badge badge-xs badge-warning font-semibold">
+            {{ leave_summary.latest.status }}
+          </a>
+        </div>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}

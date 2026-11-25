@@ -1,0 +1,27 @@
+{% from "components/stat_card.html" import render_stat_card %}
+{% from "components/loading.html" import render_loading %}
+
+<div
+  id="stat-cards"
+  hx-get="/fragments/dashboard/cards"
+  hx-trigger="refresh"
+  hx-swap="outerHTML"
+  class="space-y-2"
+>
+  <div class="flex items-center justify-end">
+    {{ render_loading("Refreshing metrics...") }}
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    {% for card in stat_cards | default([]) %}
+      {{ render_stat_card(
+        label=card.label,
+        value=card.value,
+        subtitle=card.subtitle | default(""),
+        badge_text=card.badge_text | default(None),
+        badge_variant=card.badge_variant | default("badge-khaki"),
+        href=card.href | default(None),
+        accent=card.accent | default("olive")
+      ) }}
+    {% endfor %}
+  </div>
+</div>

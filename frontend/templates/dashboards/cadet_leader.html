@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% from "components/chart_card.html" import render_chart_card %}
+{% from "components/empty_state.html" import render_empty %}
+
+{% block title %}Cadet Leader Dashboard — CADENCE{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <span class="badge badge-sm badge-khaki">{{ user.rank }} &middot; Squad Command</span>
+      <h1 class="text-2xl font-bold mt-1">{{ squad.name }} Dashboard</h1>
+      <p class="text-sm text-[var(--cadence-muted)]">{{ squad.company_name }} &middot; Strength {{ squad.strength }} cadets</p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a href="/attendance/review" class="btn btn-sm btn-cadence">Attendance Sheets</a>
+      <a href="/leave" class="btn btn-sm btn-outline">Leave Queue</a>
+    </div>
+  </div>
+
+  {% include "fragments/dashboard_cards.html" %}
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2">
+      {{ render_chart_card(
+        chart_id="leader-squad-attendance",
+        title="Squad Attendance by Parade",
+        subtitle="Present vs Absent/Leave counts for {{ squad.name }}",
+        chart_config=charts.squad_attendance
+      ) }}
+    </div>
+
+    <section class="cadence-card p-5" aria-labelledby="absentees-heading">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="absentees-heading" class="text-base font-bold">Absentees Today</h2>
+        <span class="badge badge-xs badge-warning">{{ absentees_today | length }}</span>
+      </div>
+      {% if absentees_today %}
+      <ul class="divide-y divide-[var(--cadence-border)] text-sm">
+        {% for item in absentees_today %}
+        <li class="py-2.5 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="font-medium truncate">{{ item.full_name }}</div>
+            <div class="text-xs text-[var(--cadence-muted)]">{{ item.cadet_no }}</div>
+          </div>
+          <span class="badge badge-xs {{ 'badge-info' if item.status == 'LEAVE' else 'badge-error' }}">
+            {{ item.status }}
+          </span>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="text-sm text-[var(--cadence-muted)]">100% present in today's squad parade.</p>
+      {% endif %}
+    </section>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <section class="cadence-card p-5" aria-labelledby="leader-sheets-heading">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="leader-sheets-heading" class="text-base font-bold">Pending Attendance Sheets</h2>
+        <a href="/attendance/review" class="link text-xs text-[var(--cadence-olive)]">View All</a>
+      </div>
+      {% if pending_sheets %}
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Parade</th>
+              <th>Status</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for sheet in pending_sheets %}
+            <tr>
+              <td>
+                <div class="font-medium">{{ sheet.parade_title }}</div>
+                <div class="text-xs text-[var(--cadence-muted)]">{{ sheet.parade_at | format_ist }}</div>
+              </td>
+              <td><span class="badge badge-xs badge-warning">{{ sheet.status }}</span></td>
+              <td class="text-right">
+                {% if "MARK" in sheet.allowed_actions or "OPEN" in sheet.allowed_actions %}
+                <a href="/attendance/sheet/{{ sheet.id }}" class="btn btn-xs btn-cadence">Open Sheet</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        {{ render_empty("No pending sheets", "All squad parade sheets are submitted.") }}
+      {% endif %}
+    </section>
+
+    <section class="cadence-card p-5" aria-labelledby="leader-leave-heading">
+      <div class="flex items-center justify-between mb-3">
+        <h2 id="leader-leave-heading" class="text-base font-bold">Squad Leave Requests</h2>
+        <a href="/leave" class="link text-xs text-[var(--cadence-olive)]">Open Queue</a>
+      </div>
+      {% if pending_leave %}
+      <div class="overflow-x-auto">
+        <table class="table table-sm">
+          <thead>
+            <tr>
+              <th>Cadet</th>
+              <th>Dates</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lv in pending_leave %}
+            <tr>
+              <td>
+                <div class="font-medium">{{ lv.cadet_name }}</div>
+                <div class="text-xs text-[var(--cadence-muted)] truncate max-w-[12rem]">{{ lv.reason }}</div>
+              </td>
+              <td class="text-xs">{{ lv.from_date }} &rarr; {{ lv.to_date }}</td>
+              <td class="text-right">
+                {% if "FORWARD" in lv.allowed_actions or "VIEW" in lv.allowed_actions %}
+                <a href="/leave/{{ lv.id }}" class="btn btn-xs btn-outline">Review</a>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        {{ render_empty("No leave pending", "No squad leave applications waiting for forwarding.") }}
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{
+  "squad": {
+    "id": "66666666-6666-4666-8666-666666666601",
+    "name": "Alpha Coy — Squad 1",
+    "company_name": "Alpha Company",
+    "strength": 18
+  },
+  "pending_sheets": [
+    {
+      "id": "77777777-7777-4777-8777-777777777701",
+      "parade_title": "Sunday Drill — 22 Nov",
+      "parade_at": "2026-11-22T01:30:00Z",
+      "status": "DRAFT",
+      "allowed_actions": ["OPEN", "MARK", "SUBMIT"]
+    },
+    {
+      "id": "77777777-7777-4777-8777-777777777702",
+      "parade_title": "Midweek PT & Map Reading",
+      "parade_at": "2026-11-19T01:00:00Z",
+      "status": "SUBMITTED",
+      "allowed_actions": ["OPEN"]
+    }
+  ],
+  "pending_leave": [
+    {
+      "id": "55555555-5555-4555-8555-555555555502",
+      "cadet_name": "Cadet Priya Verma",
+      "from_date": "2026-11-29",
+      "to_date": "2026-11-29",
+      "reason": "University practical examination",
+      "allowed_actions": ["FORWARD", "VIEW"]
+    },
+    {
+      "id": "55555555-5555-4555-8555-555555555503",
+      "cadet_name": "LCpl Rohan Patil",
+      "from_date": "2026-12-06",
+      "to_date": "2026-12-06",
+      "reason": "Family medical appointment",
+      "allowed_actions": ["FORWARD", "VIEW"]
+    }
+  ],
+  "absentees_today": [
+    {
+      "full_name": "Cadet Siddharth Joshi",
+      "cadet_no": "NCC-2026-0118",
+      "status": "ABSENT"
+    },
+    {
+      "full_name": "Cadet Ananya Menon",
+      "cadet_no": "NCC-2026-0124",
+      "status": "LEAVE"
+    }
+  ],
+  "stat_cards": [
+    {
+      "label": "Squad Strength",
+      "value": "18",
+      "subtitle": "Alpha Coy — Squad 1",
+      "badge_text": "Active",
+      "badge_variant": "badge-khaki",
+      "accent": "navy"
+    },
+    {
+      "label": "Pending Sheets",
+      "value": "1 Draft",
+      "subtitle": "1 awaiting JUO verification",
+      "badge_text": "Action Due",
+      "badge_variant": "badge-warning",
+      "href": "/attendance/review",
+      "accent": "amber"
+    },
+    {
+      "label": "Leave To Forward",
+      "value": "2",
+      "subtitle": "Squad applications waiting",
+      "badge_text": "Queue",
+      "badge_variant": "badge-info",
+      "href": "/leave",
+      "accent": "olive"
+    },
+    {
+      "label": "Absentees Today",
+      "value": "2",
+      "subtitle": "1 Unexcused · 1 Approved Leave",
+      "badge_text": "88.9% Present",
+      "badge_variant": "badge-success",
+      "accent": "rose"
+    }
+  ],
+  "charts": {
+    "squad_attendance": {
+      "type": "bar",
+      "labels": ["01 Nov", "08 Nov", "15 Nov", "19 Nov", "22 Nov"],
+      "datasets": [
+        { "label": "Present", "data": [15, 16, 17, 15, 16], "color": "#4A5D23" },
+        { "label": "Absent / Leave", "data": [3, 2, 1, 3, 2], "color": "#C3B091" }
+      ]
+    }
+  }
+}
