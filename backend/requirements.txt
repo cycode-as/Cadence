@@ -13,3 +13,5 @@ pytest
 httpx
 ruff
 python-multipart
+pydantic-settings
+python-dotenvsqlalchemy
