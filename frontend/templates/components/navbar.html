@@ -1,0 +1,92 @@
+<header class="cadence-navbar sticky top-0 z-30 px-4 py-2.5 shadow-sm">
+  <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+    <div class="flex items-center gap-3 min-w-0">
+      {% if show_sidebar %}
+      <label
+        for="cadence-drawer"
+        class="btn btn-ghost btn-sm btn-square lg:hidden text-slate-100"
+        aria-label="Open navigation menu"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </label>
+      {% endif %}
+
+      <a href="{{ '/dashboard' if user and user.role != 'GUEST' else '/' }}" class="flex items-center gap-2.5 min-w-0">
+        <span class="w-8 h-8 rounded-md bg-[#4A5D23] border border-[#C3B091] flex items-center justify-center font-bold text-xs tracking-wider text-white shrink-0">
+          NCC
+        </span>
+        <div class="leading-tight truncate">
+          <span class="font-bold tracking-wide text-base block">CADENCE</span>
+          <span class="text-[11px] text-slate-300 hidden sm:block">Army Wing Unit Command</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="flex items-center gap-2 sm:gap-3">
+      {% if user and user.role != 'GUEST' %}
+      <span
+        id="ws-status-dot"
+        data-status="connecting"
+        title="Live channel: connecting"
+        class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"
+        aria-label="WebSocket connection status"
+      ></span>
+      {% endif %}
+
+      <button
+        type="button"
+        onclick="toggleCadenceTheme()"
+        class="btn btn-ghost btn-xs sm:btn-sm text-slate-100 border border-white/20 hover:bg-white/10"
+        aria-label="Toggle dark or light theme"
+      >
+        <span id="theme-toggle-label">Dark</span>
+      </button>
+
+      {% if user and user.role != 'GUEST' %}
+        {% include "components/bell.html" %}
+
+        <div class="dropdown dropdown-end">
+          <button
+            type="button"
+            tabindex="0"
+            class="btn btn-ghost btn-sm text-slate-100 hover:bg-white/10 gap-2 px-2"
+            aria-label="Account menu"
+          >
+            <div class="w-7 h-7 rounded-full bg-[#4A5D23] border border-[#C3B091] flex items-center justify-center text-xs font-bold uppercase">
+              {{ user.full_name[:2] }}
+            </div>
+            <div class="hidden md:block text-left leading-tight">
+              <div class="text-xs font-semibold">{{ user.full_name }}</div>
+              <div class="text-[10px] text-[#C3B091]">{{ user.rank }} &middot; {{ user.role }}</div>
+            </div>
+          </button>
+          <ul
+            tabindex="0"
+            class="dropdown-content menu z-40 mt-3 p-2 shadow-xl cadence-card w-56 text-[var(--cadence-text)] text-sm"
+          >
+            <li class="menu-title px-2 py-1 text-xs opacity-70">
+              {{ user.scope_type }}: {{ user.scope_name }}
+            </li>
+            <li><a href="/change-password">Change Password</a></li>
+            <li><a href="/mfa/setup">MFA Security Setup</a></li>
+            <li><a href="/mfa/verify">MFA Verify Screen</a></li>
+            <li class="border-t border-[var(--cadence-border)] mt-1 pt-1">
+              <form method="post" action="/auth/logout" class="w-full p-0">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token | default('') }}" />
+                <button type="submit" class="w-full text-left px-4 py-2 text-rose-600 dark:text-rose-400 font-medium">
+                  Sign Out
+                </button>
+              </form>
+            </li>
+          </ul>
+        </div>
+      {% else %}
+        <a href="/login" class="btn btn-xs sm:btn-sm bg-[#4A5D23] hover:bg-[#38471A] border-[#C3B091] text-white">
+          Sign In
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</header>

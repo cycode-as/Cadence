@@ -1,0 +1,6 @@
+{% macro render_loading(label="Loading...") %}
+<div class="htmx-indicator items-center gap-2 text-xs text-[var(--cadence-muted)]" role="status" aria-live="polite">
+  <span class="loading loading-spinner loading-xs text-[#4A5D23]"></span>
+  <span>{{ label }}</span>
+</div>
+{% endmacro %}

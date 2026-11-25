@@ -1,0 +1,43 @@
+<aside class="drawer-side z-40">
+  <label for="cadence-drawer" aria-label="Close sidebar" class="drawer-overlay"></label>
+  <nav aria-label="Primary navigation" class="cadence-sidebar w-64 min-h-full p-4 flex flex-col justify-between gap-6">
+    <div>
+      {% if user %}
+      <div class="p-3 rounded-lg bg-[var(--cadence-khaki-light)] border border-[var(--cadence-border)] mb-4">
+        <div class="text-[11px] font-semibold uppercase tracking-wider text-[var(--cadence-muted)]">
+          {{ user.scope_type }}
+        </div>
+        <div class="text-sm font-bold truncate mt-0.5">{{ user.scope_name }}</div>
+        <div class="mt-1.5 flex items-center gap-1.5">
+          <span class="badge badge-xs badge-khaki">{{ user.rank }}</span>
+          <span class="badge badge-xs badge-outline">{{ user.role }}</span>
+        </div>
+      </div>
+      {% endif %}
+
+      <ul class="space-y-1">
+        {% for item in nav_items | default([]) %}
+        {% set is_active = (current_path is defined and (current_path == item.href or (item.active_prefix is defined and item.active_prefix and current_path.startswith(item.active_prefix)))) %}
+        <li>
+          <a
+            href="{{ item.href }}"
+            class="cadence-nav-link {{ 'is-active' if is_active else '' }}"
+            {% if is_active %}aria-current="page"{% endif %}
+          >
+            <span class="w-2 h-2 rounded-full {{ 'bg-white' if is_active else 'bg-[#4A5D23]' }}" aria-hidden="true"></span>
+            <span class="flex-1 truncate">{{ item.label }}</span>
+            {% if item.badge %}
+            <span class="badge badge-xs badge-warning">{{ item.badge }}</span>
+            {% endif %}
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="text-[11px] text-[var(--cadence-muted)] border-t border-[var(--cadence-border)] pt-3">
+      <div class="font-semibold text-[var(--cadence-text)]">Chain of Command</div>
+      <div class="mt-0.5">CO &gt; ANO &gt; JUO &gt; Leader &gt; Cadet</div>
+    </div>
+  </nav>
+</aside>

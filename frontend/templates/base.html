@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token | default('') }}" />
+  <title>{% block title %}CADENCE — NCC Unit Management{% endblock %}</title>
+
+  <!-- Prevent theme flash before Tailwind/DaisyUI load -->
+  <script>
+    (function () {
+      const saved = localStorage.getItem("cadence-theme");
+      const theme = saved === "dark" ? "dark" : "light";
+      document.documentElement.setAttribute("data-theme", theme);
+    })();
+  </script>
+
+  <!-- Pinned CDN Dependencies (no build step) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/daisyui@4.12.24/dist/full.min.css"
+    rel="stylesheet"
+    type="text/css"
+  />
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            olive: {
+              DEFAULT: "#4A5D23",
+              dark: "#38471A",
+              light: "#6F8736",
+            },
+            navy: {
+              DEFAULT: "#1B2A4A",
+              dark: "#111C33",
+            },
+            khaki: {
+              DEFAULT: "#C3B091",
+              light: "#F4EFE6",
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.4/dist/htmx.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/htmx-ext-ws@2.0.4/dist/ws.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js" crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="/static/css/app.css" />
+  {% block head_extra %}{% endblock %}
+</head>
+<body
+  class="min-h-screen flex flex-col"
+  data-ws-enabled="{{ 'true' if (user and user.role != 'GUEST') or dev_mode else 'false' }}"
+>
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 btn btn-sm btn-cadence"
+  >
+    Skip to content
+  </a>
+
+  {% set show_sidebar = (user is defined and user and user.role != 'GUEST' and not hide_sidebar) %}
+
+  {% if dev_mode %}
+  <!-- Standalone Dev Mode Role Switcher Bar -->
+  <div class="bg-amber-950 text-amber-100 text-xs px-3 py-1.5 flex flex-wrap items-center justify-between gap-2 border-b border-amber-700/60">
+    <div class="flex flex-wrap items-center gap-2">
+      <span class="badge badge-warning badge-xs font-bold">DEV MODE</span>
+      <span class="opacity-85">Role Switcher:</span>
+      {% set roles = ["CADET", "CADET_LEADER", "JUO", "ANO", "CO", "GUEST"] %}
+      <div class="flex flex-wrap gap-1">
+        {% for r in roles %}
+        <a
+          href="?role={{ r }}"
+          class="px-2 py-0.5 rounded border text-[11px] font-medium transition {{ 'bg-amber-400 text-slate-950 border-amber-300 font-bold' if (current_dev_role == r) else 'border-amber-700 hover:bg-amber-900' }}"
+        >
+          {{ r }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <a href="/" class="underline hover:text-amber-300">Dev Hub</a>
+      <span class="opacity-50">|</span>
+      <span class="opacity-80">Mock Context Active</span>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="drawer {{ 'lg:drawer-open' if show_sidebar else '' }} flex-1">
+    {% if show_sidebar %}
+    <input id="cadence-drawer" type="checkbox" class="drawer-toggle" aria-label="Toggle navigation menu" />
+    {% endif %}
+
+    <div class="drawer-content flex flex-col min-w-0">
+      {% include "components/navbar.html" %}
+
+      <main id="main-content" class="flex-1 p-4 sm:p-6 max-w-7xl w-full mx-auto">
+        {% block content %}{% endblock %}
+      </main>
+
+      <footer class="border-t border-[var(--cadence-border)] px-4 py-3 text-xs text-[var(--cadence-muted)] flex flex-wrap items-center justify-between gap-2">
+        <span>CADENCE &middot; Army Wing NCC Unit Administration</span>
+        <span>All timestamps displayed in IST (UTC+05:30)</span>
+      </footer>
+    </div>
+
+    {% if show_sidebar %}
+      {% include "components/sidebar.html" %}
+    {% endif %}
+  </div>
+
+  {% include "components/toast.html" %}
+
+  {% if dev_mode %}
+  <!-- Dev Fake WebSocket Event Panel -->
+  <aside
+    aria-label="Fake WebSocket event emitter"
+    class="fixed bottom-4 left-4 z-40 cadence-card p-3 shadow-xl max-w-xs text-xs"
+  >
+    <details>
+      <summary class="cursor-pointer font-semibold flex items-center justify-between gap-3 select-none">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span>
+          WS Event Simulator
+        </span>
+        <span class="badge badge-xs badge-ghost">Dev</span>
+      </summary>
+      <div class="mt-2.5 grid grid-cols-1 gap-1.5">
+        <button type="button" class="btn btn-xs btn-outline justify-start" onclick="emitFakeWs('attendance.updated')">
+          Emit attendance.updated
+        </button>
+        <button type="button" class="btn btn-xs btn-outline justify-start" onclick="emitFakeWs('leave.updated')">
+          Emit leave.updated
+        </button>
+        <button type="button" class="btn btn-xs btn-outline justify-start" onclick="emitFakeWs('notice.created')">
+          Emit notice.created
+        </button>
+        <button type="button" class="btn btn-xs btn-outline justify-start" onclick="emitFakeWs('dashboard.refresh')">
+          Emit dashboard.refresh
+        </button>
+        <button type="button" class="btn btn-xs btn-outline justify-start" onclick="emitFakeWs('presence.updated')">
+          Emit presence.updated
+        </button>
+      </div>
+    </details>
+  </aside>
+  {% endif %}
+
+  <script src="/static/js/toast.js"></script>
+  <script src="/static/js/ws.js"></script>
+  <script>
+    // Attach CSRF token to all non-GET HTMX requests
+    document.body.addEventListener("htmx:configRequest", function (evt) {
+      const meta = document.querySelector('meta[name="csrf-token"]');
+      const token = meta ? meta.getAttribute("content") : "";
+      if (token) {
+        evt.detail.headers["X-CSRF-Token"] = token;
+      }
+    });
+
+    // Global theme toggle
+    function toggleCadenceTheme() {
+      const root = document.documentElement;
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("cadence-theme", next);
+      const label = document.getElementById("theme-toggle-label");
+      if (label) {
+        label.textContent = next === "dark" ? "Light" : "Dark";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const current = document.documentElement.getAttribute("data-theme") || "light";
+      const label = document.getElementById("theme-toggle-label");
+      if (label) {
+        label.textContent = current === "dark" ? "Light" : "Dark";
+      }
+    });
+
+    // IST formatter helper (Section 8.0)
+    window.CadenceFormatIST = function (isoUtc) {
+      if (!isoUtc) return "—";
+      const d = new Date(isoUtc);
+      if (Number.isNaN(d.getTime())) return isoUtc;
+      return new Intl.DateTimeFormat("en-IN", {
+        timeZone: "Asia/Kolkata",
+        dateStyle: "medium",
+        timeStyle: "short",
+      }).format(d) + " IST";
+    };
+
+    {% if dev_mode %}
+    async function emitFakeWs(eventName) {
+      try {
+        const res = await fetch("/dev/emit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ event: eventName }),
+        });
+        if (!res.ok) throw new Error("Emit failed");
+      } catch (_err) {
+        if (window.CadenceWS) {
+          window.CadenceWS.emitLocal({
+            event: eventName,
+            scope_type: "BATTALION",
+            message: "Simulated locally (dev fallback).",
+          });
+        }
+      }
+    }
+    {% endif %}
+  </script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

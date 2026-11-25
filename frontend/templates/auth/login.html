@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% set hide_sidebar = true %}
+{% block title %}Sign In — CADENCE{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-6">
+  <div class="cadence-card w-full max-w-md p-6 sm:p-8">
+    <div class="text-center mb-6">
+      <div class="w-12 h-12 mx-auto rounded-lg bg-[#1B2A4A] border-2 border-[#C3B091] flex items-center justify-center text-white font-bold text-sm tracking-wider">
+        NCC
+      </div>
+      <h1 class="text-2xl font-bold mt-3">CADENCE Unit Sign In</h1>
+      <p class="text-sm text-[var(--cadence-muted)] mt-1">
+        Army Wing Battalion &amp; Contingent Portal
+      </p>
+    </div>
+
+    {% if error_message %}
+    <div role="alert" class="alert alert-error text-sm mb-4 py-2.5">
+      <span>{{ error_message }}</span>
+    </div>
+    {% endif %}
+
+    {% if info_message %}
+    <div role="status" class="alert alert-info text-sm mb-4 py-2.5">
+      <span>{{ info_message }}</span>
+    </div>
+    {% endif %}
+
+    <form method="post" action="/auth/login" class="space-y-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token | default('') }}" />
+
+      <div class="form-control">
+        <label for="login-email" class="label pb-1">
+          <span class="label-text font-medium">Official Email</span>
+        </label>
+        <input
+          id="login-email"
+          name="email"
+          type="email"
+          required
+          autocomplete="email"
+          placeholder="cadet.arjun@nccunit.edu.in"
+          value="{{ form_email | default('') }}"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <div class="form-control">
+        <label for="login-password" class="label pb-1">
+          <span class="label-text font-medium">Password</span>
+        </label>
+        <input
+          id="login-password"
+          name="password"
+          type="password"
+          required
+          autocomplete="current-password"
+          placeholder="Enter your password"
+          class="input input-bordered w-full"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-cadence w-full mt-2">
+        Sign In to CADENCE
+      </button>
+    </form>
+
+    <div class="divider text-xs text-[var(--cadence-muted)] my-5">Public Access</div>
+
+    <div class="flex items-center justify-between text-xs text-[var(--cadence-muted)]">
+      <a href="/?role=GUEST" class="link link-hover font-medium text-[var(--cadence-olive)]">
+        Public Notices &amp; Exam Links
+      </a>
+      <span>MFA enforced for ANO &amp; CO</span>
+    </div>
+  </div>
+</div>
+{% endblock %}

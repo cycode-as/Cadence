@@ -1,0 +1,142 @@
+/* CADENCE Military-Inspired Design Tokens & Utilities */
+:root {
+  --cadence-olive: #4a5d23;
+  --cadence-olive-dark: #38471a;
+  --cadence-olive-soft: #eef2e6;
+  --cadence-navy: #1b2a4a;
+  --cadence-navy-dark: #111c33;
+  --cadence-khaki: #c3b091;
+  --cadence-khaki-light: #f4efe6;
+  --cadence-surface: #ffffff;
+  --cadence-bg: #f5f4ef;
+  --cadence-border: #dcd6c8;
+  --cadence-text: #1b2432;
+  --cadence-muted: #5b6472;
+}
+
+[data-theme="dark"] {
+  --cadence-olive: #7b963d;
+  --cadence-olive-dark: #5f762c;
+  --cadence-olive-soft: #222b18;
+  --cadence-navy: #16223b;
+  --cadence-navy-dark: #0d1526;
+  --cadence-khaki: #b8a382;
+  --cadence-khaki-light: #24211b;
+  --cadence-surface: #18202c;
+  --cadence-bg: #101620;
+  --cadence-border: #2c384b;
+  --cadence-text: #e8edf5;
+  --cadence-muted: #9aa7ba;
+}
+
+html,
+body {
+  background-color: var(--cadence-bg);
+  color: var(--cadence-text);
+  min-height: 100vh;
+}
+
+/* Accessible high-visibility focus rings */
+:focus-visible {
+  outline: 2px solid var(--cadence-olive);
+  outline-offset: 2px;
+}
+
+.cadence-card {
+  background-color: var(--cadence-surface);
+  border: 1px solid var(--cadence-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 1px 3px rgba(17, 28, 51, 0.06);
+}
+
+.cadence-navbar {
+  background-color: var(--cadence-navy);
+  color: #f8fafc;
+  border-bottom: 3px solid var(--cadence-khaki);
+}
+
+.cadence-sidebar {
+  background-color: var(--cadence-surface);
+  border-right: 1px solid var(--cadence-border);
+}
+
+.cadence-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--cadence-text);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.cadence-nav-link:hover {
+  background-color: var(--cadence-olive-soft);
+  color: var(--cadence-olive);
+}
+
+.cadence-nav-link.is-active {
+  background-color: var(--cadence-olive);
+  color: #ffffff;
+}
+
+.btn-cadence {
+  background-color: var(--cadence-olive);
+  border-color: var(--cadence-olive);
+  color: #ffffff;
+}
+
+.btn-cadence:hover {
+  background-color: var(--cadence-olive-dark);
+  border-color: var(--cadence-olive-dark);
+  color: #ffffff;
+}
+
+.btn-cadence-navy {
+  background-color: var(--cadence-navy);
+  border-color: var(--cadence-navy);
+  color: #ffffff;
+}
+
+.btn-cadence-navy:hover {
+  background-color: var(--cadence-navy-dark);
+  border-color: var(--cadence-navy-dark);
+  color: #ffffff;
+}
+
+.badge-khaki {
+  background-color: var(--cadence-khaki-light);
+  color: var(--cadence-navy);
+  border: 1px solid var(--cadence-khaki);
+}
+
+[data-theme="dark"] .badge-khaki {
+  color: var(--cadence-khaki);
+}
+
+/* HTMX loading indicator helpers */
+.htmx-indicator {
+  display: none;
+}
+
+.htmx-request .htmx-indicator,
+.htmx-request.htmx-indicator {
+  display: inline-flex;
+}
+
+@keyframes cadence-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cadence-toast-enter {
+  animation: cadence-slide-in 180ms ease-out;
+}

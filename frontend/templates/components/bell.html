@@ -1,0 +1,46 @@
+<div
+  id="bell"
+  class="dropdown dropdown-end"
+  hx-get="/fragments/bell"
+  hx-trigger="refresh"
+  hx-swap="outerHTML"
+>
+  {% set unread = bell.unread_notices if bell is defined and bell else 0 %}
+  {% set pending = bell.pending_actions if bell is defined and bell else 0 %}
+  {% set total_badge = unread + pending %}
+  <button
+    type="button"
+    tabindex="0"
+    class="btn btn-ghost btn-sm btn-circle text-slate-100 hover:bg-white/10"
+    aria-label="Notifications ({{ total_badge }} items)"
+  >
+    <div class="indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+      {% if total_badge > 0 %}
+      <span class="badge badge-xs badge-warning indicator-item font-bold">{{ total_badge }}</span>
+      {% endif %}
+    </div>
+  </button>
+  <div
+    tabindex="0"
+    class="dropdown-content z-40 mt-3 w-72 cadence-card p-3 shadow-xl text-[var(--cadence-text)]"
+  >
+    <div class="flex items-center justify-between pb-2 border-b border-[var(--cadence-border)]">
+      <span class="text-sm font-semibold">Unit Alerts</span>
+      <span class="badge badge-xs badge-khaki">{{ total_badge }} active</span>
+    </div>
+    <ul class="mt-2 space-y-1.5 text-xs">
+      <li class="flex items-center justify-between p-1.5 rounded hover:bg-base-200/60">
+        <span>Unread Notices</span>
+        <a href="/notices" class="badge badge-sm badge-outline font-semibold">{{ unread }}</a>
+      </li>
+      <li class="flex items-center justify-between p-1.5 rounded hover:bg-base-200/60">
+        <span>Pending Actions</span>
+        <a href="/dashboard" class="badge badge-sm badge-warning font-semibold">{{ pending }}</a>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}MFA Setup — CADENCE{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto py-4">
+  <div class="cadence-card p-6 sm:p-8">
+    <div class="flex flex-wrap items-start justify-between gap-3 border-b border-[var(--cadence-border)] pb-4">
+      <div>
+        <span class="badge badge-sm badge-khaki">Two-Factor Security</span>
+        <h1 class="text-xl sm:text-2xl font-bold mt-2">Set Up Authenticator App (TOTP)</h1>
+        <p class="text-sm text-[var(--cadence-muted)] mt-1">
+          Mandatory for ANO and CO accounts. Recommended for all leadership roles.
+        </p>
+      </div>
+    </div>
+
+    {% if error_message %}
+    <div role="alert" class="alert alert-error text-sm mt-4 py-2.5">
+      <span>{{ error_message }}</span>
+    </div>
+    {% endif %}
+
+    {% if success_message %}
+    <div role="status" class="alert alert-success text-sm mt-4 py-2.5">
+      <span>{{ success_message }}</span>
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 items-center">
+      <div class="flex flex-col items-center p-4 rounded-lg bg-[var(--cadence-khaki-light)] border border-[var(--cadence-border)]">
+        {% if qr_data_uri %}
+        <img
+          src="{{ qr_data_uri }}"
+          alt="Authenticator QR code for CADENCE MFA"
+          class="w-44 h-44 bg-white p-2 rounded border border-[var(--cadence-border)]"
+        />
+        {% else %}
+        <div class="w-44 h-44 bg-white p-3 rounded border border-dashed border-[var(--cadence-border)] flex flex-col items-center justify-center text-center text-xs text-slate-600">
+          <span class="font-bold text-[#1B2A4A]">QR Preview</span>
+          <span class="mt-1">Scan from /auth/mfa/setup</span>
+        </div>
+        {% endif %}
+        <div class="mt-3 text-center">
+          <div class="text-[11px] uppercase tracking-wider text-[var(--cadence-muted)]">Manual Key</div>
+          <code class="text-xs font-mono font-semibold select-all">{{ secret_key | default("JBSWY3DPEHPK3PXP") }}</code>
+        </div>
+      </div>
+
+      <div>
+        <ol class="list-decimal list-inside space-y-2 text-sm text-[var(--cadence-muted)] mb-5">
+          <li>Open Google Authenticator, Authy, or Microsoft Authenticator.</li>
+          <li>Scan the QR code or enter the manual key.</li>
+          <li>Enter the 6-digit code below to confirm activation.</li>
+        </ol>
+
+        <form method="post" action="/auth/mfa/setup/confirm" class="space-y-4">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token | default('') }}" />
+
+          <div class="form-control">
+            <label for="mfa-setup-code" class="label pb-1">
+              <span class="label-text font-medium">6-Digit Verification Code</span>
+            </label>
+            <input
+              id="mfa-setup-code"
+              name="code"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]{6}"
+              maxlength="6"
+              required
+              autocomplete="one-time-code"
+              placeholder="123456"
+              class="input input-bordered font-mono tracking-[0.35em] text-center text-lg"
+            />
+          </div>
+
+          <button type="submit" class="btn btn-cadence w-full">
+            Verify &amp; Enable MFA
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

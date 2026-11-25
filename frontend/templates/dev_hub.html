@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Dev Hub — CADENCE Phase 1{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+  {% if info_banner %}
+  <div role="status" class="alert alert-info text-sm">
+    <span>{{ info_banner }}</span>
+  </div>
+  {% endif %}
+
+  <div class="cadence-card p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <div>
+        <span class="badge badge-sm badge-khaki">Phase 1 &middot; Shell, Auth &amp; Dev Harness</span>
+        <h1 class="text-2xl font-bold mt-2">CADENCE Frontend Dev Hub</h1>
+        <p class="text-sm text-[var(--cadence-muted)] mt-1">
+          Use the top Role Switcher bar to test navigation and permissions across all 5 NCC roles + Guest, and the bottom-left WS Simulator to test live toast &amp; bell refreshes.
+        </p>
+      </div>
+      <div class="text-right text-xs">
+        <div class="font-semibold">Active Role: {{ current_dev_role }}</div>
+        <div class="text-[var(--cadence-muted)]">{{ user.rank }} &middot; {{ user.scope_type }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="cadence-card p-5">
+      <h2 class="font-bold text-base mb-2">Authentication Screens</h2>
+      <ul class="space-y-1.5 text-sm">
+        <li><a href="/login" class="link text-[var(--cadence-olive)]">Login Screen (/login)</a></li>
+        <li><a href="/mfa/setup" class="link text-[var(--cadence-olive)]">MFA TOTP Setup (/mfa/setup)</a></li>
+        <li><a href="/mfa/verify" class="link text-[var(--cadence-olive)]">MFA Verify &amp; Email OTP (/mfa/verify)</a></li>
+        <li><a href="/change-password" class="link text-[var(--cadence-olive)]">Change Password (/change-password)</a></li>
+      </ul>
+    </div>
+
+    <div class="cadence-card p-5">
+      <h2 class="font-bold text-base mb-2">Error Templates</h2>
+      <ul class="space-y-1.5 text-sm">
+        <li><a href="/errors/403" class="link text-[var(--cadence-olive)]">403 Forbidden (/errors/403)</a></li>
+        <li><a href="/errors/404" class="link text-[var(--cadence-olive)]">404 Not Found (/errors/404)</a></li>
+        <li><a href="/errors/500" class="link text-[var(--cadence-olive)]">500 Server Error (/errors/500)</a></li>
+      </ul>
+    </div>
+
+    <div class="cadence-card p-5">
+      <h2 class="font-bold text-base mb-2">Role Navigation Preview</h2>
+      <p class="text-xs text-[var(--cadence-muted)] mb-2">
+        Current sidebar menu items for <strong>{{ user.role }}</strong>:
+      </p>
+      <ul class="text-xs space-y-1">
+        {% for item in nav_items %}
+        <li class="flex items-center justify-between">
+          <span>{{ item.label }}</span>
+          <code class="opacity-70">{{ item.href }}</code>
+        </li>
+        {% else %}
+        <li class="text-[var(--cadence-muted)]">Guest role has no sidebar menu.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

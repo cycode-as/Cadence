@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% set hide_sidebar = true %}
+{% block title %}MFA Verification — CADENCE{% endblock %}
+
+{% block content %}
+<div class="min-h-[70vh] flex items-center justify-center py-6">
+  <div class="cadence-card w-full max-w-md p-6 sm:p-8">
+    <div class="mb-5">
+      <span class="badge badge-sm badge-khaki">Security Check</span>
+      <h1 class="text-2xl font-bold mt-2">Two-Factor Verification</h1>
+      <p class="text-sm text-[var(--cadence-muted)] mt-1">
+        Enter the 6-digit code from your authenticator app or request a one-time email code.
+      </p>
+    </div>
+
+    {% if error_message %}
+    <div role="alert" class="alert alert-error text-sm mb-4 py-2.5">
+      <span>{{ error_message }}</span>
+    </div>
+    {% endif %}
+
+    {% if info_message %}
+    <div role="status" class="alert alert-info text-sm mb-4 py-2.5">
+      <span>{{ info_message }}</span>
+    </div>
+    {% endif %}
+
+    <form method="post" action="/auth/mfa/verify" class="space-y-4">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token | default('') }}" />
+      <input type="hidden" name="method" id="mfa-method-input" value="{{ active_method | default('totp') }}" />
+
+      <div class="form-control">
+        <label for="mfa-verify-code" class="label pb-1">
+          <span class="label-text font-medium">Verification Code</span>
+        </label>
+        <input
+          id="mfa-verify-code"
+          name="code"
+          type="text"
+          inputmode="numeric"
+          pattern="[0-9]{6}"
+          maxlength="6"
+          required
+          autocomplete="one-time-code"
+          placeholder="000000"
+          class="input input-bordered font-mono tracking-[0.35em] text-center text-lg"
+        />
+      </div>
+
+      <button type="submit" class="btn btn-cadence w-full">
+        Verify &amp; Continue
+      </button>
+    </form>
+
+    <div class="divider text-xs text-[var(--cadence-muted)] my-5">Alternative Method</div>
+
+    <div class="space-y-2.5">
+      <button
+        type="button"
+        hx-post="/auth/mfa/email-otp"
+        hx-target="#email-otp-status"
+        hx-swap="innerHTML"
+        onclick="document.getElementById('mfa-method-input').value='email'"
+        class="btn btn-outline btn-sm w-full"
+      >
+        Send One-Time Code to Registered Email
+      </button>
+      <div id="email-otp-status" class="text-xs text-center text-[var(--cadence-muted)]" aria-live="polite">
+        {% if masked_email %}
+        Registered email: <span class="font-medium">{{ masked_email }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mt-5 text-center text-xs">
+      <a href="/login" class="link link-hover text-[var(--cadence-muted)]">Back to Sign In</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
