@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import unittest
-from datetime import date
+from datetime import date, datetime, timezone
 
 from sqlalchemy import create_engine, event, inspect
 from sqlalchemy.exc import IntegrityError
@@ -144,6 +144,26 @@ class TaskModelTests(unittest.TestCase):
             self.assertIsNone(stored.assignee)
             self.assertIsNone(stored.description)
             self.assertIsNone(stored.due_date)
+            self.assertIsNone(stored.submission_text)
+            self.assertIsNone(stored.submitted_at)
+
+    def test_submission_data_and_timezone_aware_timestamp(self) -> None:
+        submitted_at = datetime(2026, 11, 26, 9, 30, tzinfo=timezone.utc)
+        with self.Session() as db:
+            task = self._task(
+                submission_text="Equipment checklist completed.",
+                submitted_at=submitted_at,
+            )
+            db.add(task)
+            db.commit()
+            stored = db.get(Task, task.id)
+
+            self.assertIsNotNone(stored)
+            assert stored is not None
+            self.assertEqual(stored.submission_text, "Equipment checklist completed.")
+            # SQLite drops timezone metadata; the model column still declares timezone support.
+            self.assertEqual(stored.submitted_at, submitted_at.replace(tzinfo=None))
+            self.assertTrue(Task.__table__.c.submitted_at.type.timezone)
 
     def test_required_fields_and_status_priority_checks(self) -> None:
         required_field_cases = [

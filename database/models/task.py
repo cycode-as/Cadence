@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime
 from typing import TYPE_CHECKING
 
-from sqlalchemy import CheckConstraint, Date, ForeignKey, String, Text, Uuid
+from sqlalchemy import CheckConstraint, Date, DateTime, ForeignKey, String, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database.base import Base, TimestampMixin, UUIDPrimaryKeyMixin
@@ -63,9 +63,15 @@ class Task(UUIDPrimaryKeyMixin, TimestampMixin, Base):
 
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
+    submission_text: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="TODO", index=True)
     priority: Mapped[str] = mapped_column(String(16), nullable=False, default="MEDIUM", index=True)
     due_date: Mapped[date | None] = mapped_column(Date, nullable=True, index=True)
+    submitted_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True),
+        nullable=True,
+        default=None,
+    )
 
     unit: Mapped[Unit] = relationship("Unit", foreign_keys=[unit_id])
     contingent: Mapped[Contingent | None] = relationship("Contingent", foreign_keys=[contingent_id])

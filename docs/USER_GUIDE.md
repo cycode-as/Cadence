@@ -201,9 +201,11 @@ python -m unittest discover -s tests -v
 | `assignee_id` | UUID, nullable | Assigned user; null while unassigned |
 | `title` | String(255), required | Short task title |
 | `description` | Text, nullable | Additional task details |
+| `submission_text` | Text, nullable | Optional submitted response |
 | `status` | String(32), required | Checked status value; defaults to `TODO` |
 | `priority` | String(16), required | Checked priority value; defaults to `MEDIUM` |
 | `due_date` | Date, nullable | Optional due date |
+| `submitted_at` | Timestamp with time zone, nullable | Optional submission time |
 | `created_at` | Timestamp with time zone, required | Creation time in UTC |
 | `updated_at` | Timestamp with time zone, required | Last update time in UTC |
 
