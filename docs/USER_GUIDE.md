@@ -153,7 +153,7 @@ python -m unittest discover -s tests -v
 
 ---
 
-## 9. Schema Overview (19 Tables)
+## 9. Schema Overview (20 Tables)
 
 ### Organization
 - `unit` — Top-level battalion
@@ -187,6 +187,51 @@ python -m unittest discover -s tests -v
 ### Auth & MFA (Requested by Member 1)
 - `refresh_token` — Hashed rotating refresh tokens (`token_hash` unique, `family_id`, `expires_at`, `revoked_at`, `replaced_by_token_id`)
 - `otp_code` — Hashed one-time email OTPs (`code_hash`, `purpose`, `expires_at`, `consumed_at`, `attempt_count >= 0`)
+
+### Tasks (Provisional Member 1 Integration)
+- `task` — Scoped work item. PostgreSQL UUID columns are represented as UUID strings in Python.
+
+| Field | Type / nullability | Description |
+|---|---|---|
+| `id` | UUID, required | Generated primary key |
+| `unit_id` | UUID, required | Owning unit |
+| `contingent_id` | UUID, nullable | Contingent scope; null for unit-wide tasks |
+| `squad_id` | UUID, nullable | Squad scope; null for broader-scope tasks |
+| `created_by_id` | UUID, required | User who created the task |
+| `assignee_id` | UUID, nullable | Assigned user; null while unassigned |
+| `title` | String(255), required | Short task title |
+| `description` | Text, nullable | Additional task details |
+| `status` | String(32), required | Checked status value; defaults to `TODO` |
+| `priority` | String(16), required | Checked priority value; defaults to `MEDIUM` |
+| `due_date` | Date, nullable | Optional due date |
+| `created_at` | Timestamp with time zone, required | Creation time in UTC |
+| `updated_at` | Timestamp with time zone, required | Last update time in UTC |
+
+- Provisional status values: `TODO`, `IN_PROGRESS`, `DONE`, `CANCELLED`.
+- Provisional priority values: `LOW`, `MEDIUM`, `HIGH`, `URGENT`.
+- `Task.creator` and `Task.assignee` are distinct `User` relationships. Unit, contingent, squad, and creator deletion is restricted; deleting an assignee sets `assignee_id` to `NULL`.
+- The current backend Task schema is not present in the repository. Field names and status/priority sets above are explicit integration assumptions and must be confirmed by Member 1 before API integration.
+
+The Task table is introduced by an additive Alembic revision. Review the new revision and apply it with `alembic upgrade head`; it does not replace the initial migration or modify existing tables.
+
+Example:
+
+```python
+from database.models import Task
+
+task = Task(
+    unit_id=unit.id,
+    contingent_id=contingent.id,
+    squad_id=squad.id,
+    created_by_id=creator.id,
+    assignee_id=assignee.id,
+    title="Prepare parade checklist",
+    status="TODO",
+    priority="MEDIUM",
+)
+db.add(task)
+db.commit()
+```
 
 ---
 

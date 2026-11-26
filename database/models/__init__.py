@@ -18,6 +18,7 @@ from database.models.leave import ApprovalStep, LeaveRequest
 from database.models.org import Company, Contingent, Squad, Unit
 from database.models.other import AuditLog, ExamResource
 from database.models.people import CadetProfile, RankHistory, RoleAssignment, User
+from database.models.task import Task
 
 __all__ = [
     "ALL_ENUM_TYPES",
@@ -46,6 +47,7 @@ __all__ = [
     "ScopeType",
     "SheetStatus",
     "Squad",
+    "Task",
     "Unit",
     "User",
 ]

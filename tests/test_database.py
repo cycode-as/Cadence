@@ -65,6 +65,7 @@ EXPECTED_TABLES = {
     "audit_log",
     "refresh_token",
     "otp_code",
+    "task",
 }
 
 
@@ -86,7 +87,7 @@ class DatabaseLayerTests(unittest.TestCase):
     def tearDown(self) -> None:
         self.engine.dispose()
 
-    def test_all_19_tables_and_mappers_registered(self) -> None:
+    def test_all_20_tables_and_mappers_registered(self) -> None:
         configure_mappers()
         self.assertEqual(set(Base.metadata.tables.keys()), EXPECTED_TABLES)
         inspector = inspect(self.engine)

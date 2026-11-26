@@ -40,6 +40,7 @@ from database.models import (
     NoticeReceipt,
     ExamResource,
     AuditLog,
+    Task,
 )
 ```
 
@@ -94,7 +95,37 @@ def example_endpoint(db: Session = Depends(get_db)):
 3. **Audit JSON columns:** `AuditLog` uses `before_data` and `after_data` (`JSONB` on PostgreSQL, `JSON` on SQLite) to avoid SQL `BEFORE`/`AFTER` keyword collisions.
 4. **Password hashing in `database/seed.py`:** Uses PBKDF2-HMAC-SHA256 (`$pbkdf2-sha256$600000$<salt_b64>$<hash_b64>`). Coordinate `verify_password()` in backend auth accordingly or align hashing helper before PR integration.
 
-## 5. Migration & Connection Setup
+## 5. Provisional Task Model
+
+Import `Task` from `database.models`. The additive `task` table uses UUID-string IDs, `unit_id` (required), `contingent_id` and `squad_id` (nullable scope), `created_by_id` (required), `assignee_id` (nullable), `title`, nullable `description` and `due_date`, `status`, `priority`, and shared `created_at` / `updated_at` timestamps.
+
+`Task.creator` and `Task.assignee` are separate `User` relationships. Unit, contingent, squad, and creator references use `ON DELETE RESTRICT`; assignee uses `ON DELETE SET NULL`. Tasks can be unit-wide, contingent-wide, or squad-specific; the application must ensure the selected squad, contingent, and unit agree because these references are independently constrained.
+
+Provisional status values are `TODO`, `IN_PROGRESS`, `DONE`, and `CANCELLED`; provisional priority values are `LOW`, `MEDIUM`, `HIGH`, and `URGENT`. Defaults are `TODO` and `MEDIUM`. `docs/CONTRACTS.md` and the available backend source do not define Task fields or these values; Member 1 must confirm these assumptions and the API's field/value names before integrating.
+
+Example:
+
+```python
+from database.models import Task
+
+task = Task(
+    unit_id=unit.id,
+    contingent_id=contingent.id,
+    squad_id=squad.id,
+    created_by_id=actor.id,
+    assignee_id=assignee.id,
+    title="Prepare parade checklist",
+    description="Check the squad equipment list.",
+    status="TODO",
+    priority="MEDIUM",
+)
+db.add(task)
+db.commit()
+```
+
+Apply the additive Task migration with `alembic upgrade head` after reviewing the generated migration. Do not edit the initial revision.
+
+## 6. Migration & Connection Setup
 - Configure `DATABASE_URL=postgresql+psycopg://user:password@localhost:5432/cadence_db` in `.env`.
 - Run `alembic upgrade head` before starting the backend server.
 - Run `python -m database.seed` to populate demo logins (`cadet@`, `leader@`, `juo@`, `ano@`, `co@cadence.test`).

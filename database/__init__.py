@@ -33,6 +33,7 @@ from database.models import (
     ScopeType,
     SheetStatus,
     Squad,
+    Task,
     Unit,
     User,
 )
@@ -73,6 +74,7 @@ __all__ = [
     "SessionLocal",
     "SheetStatus",
     "Squad",
+    "Task",
     "Unit",
     "User",
     "create_db_engine",
